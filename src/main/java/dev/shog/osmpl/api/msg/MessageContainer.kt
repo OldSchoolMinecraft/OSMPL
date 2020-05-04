@@ -1,14 +1,12 @@
 package dev.shog.osmpl.api.msg
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import dev.shog.osmpl.formatTextArray
+import org.json.JSONObject
 
 /**
  * Contains messages for a Plugin.
  */
-class MessageContainer private constructor(val data: JsonNode) {
+class MessageContainer private constructor(val data: JSONObject) {
     /**
      * Get a [message] using it's link.
      */
@@ -17,13 +15,12 @@ class MessageContainer private constructor(val data: JsonNode) {
         val msg = split.last()
         split.removeAt(split.size - 1)
 
-        var pointer: JsonNode = data
+        var pointer = data
         for (spl in split) {
-            if (pointer.isObject)
-                pointer = pointer.get(spl)
+            pointer = pointer.getJSONObject(spl)
         }
 
-        return pointer.get(msg).asText()
+        return pointer.getString(msg)
     }
 
     /**
@@ -44,9 +41,8 @@ class MessageContainer private constructor(val data: JsonNode) {
          */
         fun fromFile(fileName: String): MessageContainer {
             val reader = MessageContainer::class.java.getResourceAsStream("/${fileName}")
-            val data = ObjectMapper(YAMLFactory()).readTree(reader)
 
-            return MessageContainer(data)
+            return MessageContainer(JSONObject(String(reader.readBytes())))
         }
     }
 }

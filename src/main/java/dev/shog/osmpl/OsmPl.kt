@@ -8,6 +8,7 @@ import dev.shog.osmpl.commands.*
 import dev.shog.osmpl.commands.impl.OsmCommand
 import dev.shog.osmpl.commands.punish.*
 import dev.shog.osmpl.commands.raffle.RAFFLE_COMMAND
+import dev.shog.osmpl.discord.DiscordLink
 import dev.shog.osmpl.events.*
 import dev.shog.osmpl.events.data.PLAYER_DATA_MANAGER
 import dev.shog.osmpl.handle.*
@@ -25,7 +26,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx
 import java.util.concurrent.TimeUnit
 
 class OsmPl : OsmPlugin() {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages.yml")
+    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages.json")
 
     init {
         commands.addAll(setOf(
@@ -38,6 +39,7 @@ class OsmPl : OsmPlugin() {
 
         internal lateinit var slowMode: SlowMode
         internal lateinit var ipChecker: IpChecker
+        internal lateinit var discordLink: DiscordLink
     }
 
     override fun onEnable() {
@@ -82,11 +84,10 @@ class OsmPl : OsmPlugin() {
         server.pluginManager.registerEvent(Event.Type.PLAYER_BED_LEAVE, ev, Event.Priority.Normal, this)
         server.pluginManager.registerEvent(Event.Type.PLAYER_BED_ENTER, ev, Event.Priority.Normal, this)
 
+        discordLink = DiscordLink(this)
         CommandRunner(this)
 
-        server.scheduler.scheduleAsyncDelayedTask(this, {
-            TrustFactorHookHandler.fillRemaining(this) // other plugins should've initialized before this
-        }, 1000 * 60)
+        TrustFactorHookHandler.fillRemaining(this) // Currently not hooking into OSMQ
     }
 
     /**

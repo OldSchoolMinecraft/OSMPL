@@ -22,17 +22,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'com.konghq:unirest-java:3.7.02'
     implementation 'org.json:json:20190722'
-    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0"
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
     implementation 'mysql:mysql-connector-java:8.0.15'
+    implementation "com.discord4j:discord4j-core:3.1.0.M2"
 
     // For Jar
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     provided 'com.konghq:unirest-java:3.7.02'
     provided 'org.json:json:20190722'
-    provided "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.3.0"
-    provided 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
     provided 'mysql:mysql-connector-java:8.0.15'
+    provided "com.discord4j:discord4j-core:3.1.0.M2"
 
     implementation(files("/libs/Project-Poseidon.jar"))
     implementation(files("/libs/FakeOnline.jar"))

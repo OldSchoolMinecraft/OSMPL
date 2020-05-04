@@ -1,0 +1,178 @@
+{
+    "trustfactor": {
+        "view": "§8{0}§7's trust factor is currently §8{1}§7.",
+        "modify": "§8{0}§7's trust factor is now §8{1}§7."
+    },
+    "error": {
+        "console": "You must be a player for this command!",
+        "user-exists": "§cThat user doesn't exist!"
+    },
+    "banned": {
+        "invalid": "§cYou have been banned.",
+        "timed": "§c{0} - {1}",
+        "permanent": "§c{0} - Permanent",
+        "ip-banned": "§cYour IP is banned! If you believe this is incorrect, please message us on Discord."
+    },
+    "muted": {
+        "invalid": "§cYou are muted.",
+        "timed": "§cYou have been muted for \"{0}\" until {1}.",
+        "permanent": "§cYou have been permanently muted for \"{0}\"."
+    },
+    "ptt": {
+        "header": "§7Users with the top play time (refreshes hourly):\n{0}",
+        "user-entry": "§8{0}§7. {1}§7: §8{2}",
+        "error": "§cYou couldn't be found on the leaderboard!",
+        "loc": "§7You are currently §8#{0}§7 on the leaderboard."
+    },
+    "baltop": {
+        "header": "§7Users with the top balance (refreshes hourly):\n{0}",
+        "user-entry": "§8{0}§7. {1}§7: §8{2}",
+        "error": "§cYou couldn't be found on the leaderboard!",
+        "loc": "§7You are currently §8#{0}§7 on the leaderboard."
+    },
+    "player-join": {
+        "ip-not-resolved": "§cYour IP could not be resolved.",
+        "mod-not-proper-ip": "§cYour IP is not authorized for this account.",
+        "ip-vpn": "§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord."
+    },
+    "default-ban-messages": {
+        "ip-ban-auto": "User's IP is banned"
+    },
+    "discord": "§7{0}",
+    "hat": {
+        "success": "§7Nice hat!",
+        "error": "§cYou need something in your hand!"
+    },
+    "osm": {
+        "reloaded": "The config has been successfully reloaded",
+        "default": "§7OSM-Util: §8v{0}"
+    },
+    "seen": {
+        "online": "§8Seen §7{0}{5}\n§8Logged in at: §7{1}\n§8Play time in session: §7{2}\n§8Total play time: §7{3}\n§8First join date: §7{4}{6}",
+        "offline": "§8Seen §7{0}{4}\n§8Last seen: §7{1}\n§8Play time: §7{2}\n§8First join date: §7{3}{5}",
+        "banned": "§8Seen §7{0}\n§8Last seen: §7{1}\n§8Play time: §7{2}\n§8First join date: §7{3}\n§8Ban reason: §7{4}\n§8Un-ban date: §7{5}",
+        "not-found": "§cThat player could not be found!",
+        "no-permission": "§cYou don't have permission for this!",
+        "console": "§cYou cannot do this as Console!",
+        "muted": "\n§8Un-mute date: §7{0}\n§8Mute reason: §7{1}"
+    },
+    "player-manager": {
+        "invalid-user": "§cThat user could not be found!",
+        "online-user": "§a{0}§7: (Data File) {1}",
+        "offline-user": "§c{0}§7: (Data File) {1}"
+    },
+    "sleep-command": {
+        "cant-sleep": "§cYou can't sleep right now!",
+        "no-longer-sleeping": "§7You are no longer sleeping!",
+        "now-sleeping": "§7You are now sleeping!"
+    },
+    "sleeping": {
+        "no-one": "§cNo one is sleeping right now!",
+        "header": "§7Current Sleeping Players: {0}",
+        "entry": "§8{0}§7",
+        "cant-sleep": "§cYou can't sleep right now!"
+    },
+    "landmarks": {
+        "create": "§7You have created a landmark named §8{0}§7 at §8{1}/{2}/{3}§7.",
+        "remove": "§7You have removed a landmark named §8{0}§7.",
+        "not-found": "§7The landmark §8{0}§7 could not be found.",
+        "view": "§7Landmarks: {0}"
+    },
+    "slowmode": {
+        "announce": {
+            "enabled": "§7A §8{0} §7second slow mode has been §8enabled§7.",
+            "timing": "§7The slow mode delay has been set to §8{0} seconds§7.",
+            "disabled": "§7Slow mode has been §8disabled§7."
+        },
+        "default": "§7Slow mode is currently on a §8{0}§7 second cool down.",
+        "disabled": "§7Slow mode is currently §8disabled§7.",
+        "valid-number": "§cPlease enter valid numbers!",
+        "perm-set": "§7Slow mode has been set with a §8{0}§7 second delay.",
+        "temp-set": "§7Slow mode has been temporarily set with a §8{0}§7 second delay.",
+        "toggle": "§7Slow mode has been §8{0}§7."
+    },
+    "staff-mode": {
+        "enabled": "Staff mode has been enabled!",
+        "disabled": "Staff mode has been disabled!",
+        "view-header": "§8{0}§7",
+        "view-entry": "§7Current People in Staff Mode: {0}"
+    },
+    "donate": {
+        "already-donated": "§aYou are already a donor!",
+        "not-donated": "§7You can donate to OSM at §8https://paypal.me/osmserver§7."
+    },
+    "list": {
+        "user": "§8{0}§7, ",
+        "group": "\n§7{0}§7: ",
+        "header": "§7There are currently §8{0}§7 out of §8{1}§7 max players online."
+    },
+    "chat": {
+        "default": "{0} {1}§r{2}§r: {3}"
+    },
+    "raffle": {
+        "winner-single": "§8{0} §7has won a §8{1}§7 in the raffle with a §8{2}%§7 chance.",
+        "winner-multiple": "§8{0} §7have won §8{1}§7 in the raffle.",
+        "help": {
+            "default": "§7Raffle Help\n§8/raffle§7: View the current raffle information.\n§8/raffle buy [amount]§7: Buy a specific amount of tickets for the raffle.",
+            "admin": "§7Raffle Help\n§8/raffle§7: View the current raffle information.\n§8/raffle buy [amount]§7: Buy a specific amount of tickets for the raffle.\n§8/raffle end§7: End the current raffle without picking a winner.\n§8/raffle pick-winner§7: End the current raffle and pick a winner.\n§8/raffle create [ticket limit] [ticket limit per user] [cost of ticket] [time until winner pick] [amount of winners] [prize name]§7: Create a raffle."
+        },
+        "buy": {
+            "default": "§7You have bought §8{0} §7ticket(s)!"
+        },
+        "end": {
+            "broadcast": "§cThe current raffle has ended."
+        },
+        "error": {
+            "player-limit-over-global": "§cThe player limit must be less than the global limit!",
+            "valid-number": "§cPlease enter valid numbers!",
+            "not-enough": "§cThere isn't enough users to pick a winner, use the regular end command.",
+            "no-raffle": "§cThere isn't a raffle going on!",
+            "no-money": "§cYou don't have enough money for that!",
+            "over-limit": "§cYou are going over the ticket limit! The individual limit is {0}, and the global is {1}."
+        },
+        "create": {
+            "broadcast": "§7A raffle has been started for a §8{0}§7 and ends in §8{1}§7 minutes with §8{2}§7 available tickets. (/raffle help)"
+        },
+        "board": {
+            "empty": "§cNo one has entered in this raffle!",
+            "default": "§8Raffle Leaderboard",
+            "entry": "\n§8{0} §7| §8{1}§7: §8{2} §7(§8{3}§7%)"
+        },
+        "online-default": {
+            "entered": "§7There is currently a raffle going on for §8{0}§7. This raffle ends in §8{1}§7 minutes. You have §8{2}§7 of of the possible §8{3}§7 tickets.",
+            "unentered": "§7There is currently a raffle going on for §8{0}§7. This raffle ends in §8{1}§7 minutes. You have not entered."
+        }
+    },
+    "admin": {
+        "ip-ban": "§c{0}'s ip ({1}) has been previously banned, they have been banned.",
+        "unable-check-vpn": "§c{0} was unable to be checked for a VPN.",
+        "possible-vpn": "§c{0} most likely has a VPN:\n{1}",
+        "vpn": "§c{0} has a VPN (kicked):\n{1}",
+        "ip-info": "§c{0}: {1}",
+        "expired": {
+            "ban": "§c{0}'s ban has expired.",
+            "player-mute": "Your mute has expired!",
+            "mute": "§c{0}'s mute has expired."
+        },
+        "tried": {
+            "ban": "§c{0} tried to join but they're banned.",
+            "mute": "§c{0} tried to speak but they're muted.",
+            "mute-command": "§c{0} tried to run a verbal command, but they're muted."
+        }
+    },
+    "mute": {
+        "avoid": "§cYou can't mute this person!"
+    },
+    "sleep": {
+        "complete": "§8{0}/{1} §7players are in bed, time is now turning to day!",
+        "part": "§8{0} §7is in bed. §8{1} §7more are required to turn it to day.",
+        "left": "§8{0} §7is no longer in bed. §8{1} §7more are now required to turn it to day."
+    },
+    "player": {
+        "death": "§7{0}§8 {1}"
+    },
+    "exception": {
+        "kick": "§cYour IP could not be resolved.",
+        "ip-vpn": "§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord."
+    }
+}

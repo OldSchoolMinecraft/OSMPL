@@ -1,0 +1,30 @@
+{
+    "discord": {
+        "join": "__{0}__ has joined.",
+        "leave": "__{0}__ has left.",
+        "death": "__{0}__ has died.",
+        "default": "{0}"
+    },
+    "minecraft": {
+        "default": "§7{0}#{1}§f: {2}",
+        "mention": "§eYou have mentioned §6{0}#{1}§e."
+    },
+    "commands": {
+        "online": "There are currently `{0}` players online",
+        "list": "Online Players ({0}): {1}",
+        "cursed": {
+            "default": "§eCurrent cursed words: {0}",
+            "already-exists": "§cThat word is already cursed!",
+            "added": "§eThe word {0} is now cursed!",
+            "doesnt-exist": "§cThat word is not cursed!",
+            "removed": "§eThe word {0} is no longer cursed!"
+        }
+    },
+    "errors": {
+        "everyone": "§cYou can't do that!"
+    },
+    "mentions": {
+        "user": "§7{0}#{1}§r",
+        "channel": "§7#{1}§r"
+    }
+}

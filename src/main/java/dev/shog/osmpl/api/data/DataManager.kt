@@ -53,8 +53,11 @@ object DataManager {
      */
     fun saveAll() {
         val mapper = ObjectMapper()
-        data.asSequence()
-                .forEach { saveUser(it, mapper) }
+
+        synchronized(data) {
+            data.asSequence()
+                    .forEach { saveUser(it, mapper) }
+        }
     }
 
     /**
