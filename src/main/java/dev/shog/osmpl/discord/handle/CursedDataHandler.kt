@@ -43,7 +43,7 @@ object CursedDataHandler {
      * If [word] is cursed.
      */
     fun isCursed(word: String) =
-        getCursed().contains(word)
+            getCursed().any { cursed -> word.contains(cursed) }
 
     /**
      * If any words of [words] is cursed.

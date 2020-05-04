@@ -109,7 +109,7 @@ commands:
             - dl
     cursed:
         description: Manage cursed Discord owrds.
-        usage: /cursed [add/remove/view] {word}
+        usage: /cursed [add/remove] {word}
         permission-message: You do not have permission for this!
         permission: osm.dl.cursed
 permissions:

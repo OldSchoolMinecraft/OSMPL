@@ -1,7 +1,12 @@
 package dev.shog.osmpl.events
 
 import dev.shog.osmpl.OsmPl
+import dev.shog.osmpl.api.data.DataManager
+import dev.shog.osmpl.discord.handle.CursedDataHandler
+import dev.shog.osmpl.discord.handle.WebhookHandler
+import me.moderator_man.fo.FakeOnline
 import org.bukkit.ChatColor
+import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerListener
@@ -14,6 +19,25 @@ internal val LAST_SENT_MESSAGE = ConcurrentHashMap<String, Long>()
  * Player chat.
  */
 internal val PLAYER_CHAT = { osm: OsmPl ->
+    /**
+     * Send the message.
+     */
+    fun sendDiscordMessage(player: Player, message: String) {
+        if (!FakeOnline.instance.um.isAuthenticated(player.name) || DataManager.isUserMuted(player.name))
+            return
+
+        if (CursedDataHandler.isCursed(message.split(" "))) {
+            player.sendMessage(OsmPl.discordLink.container.getMessage("errors.everyone"))
+            return
+        }
+
+        WebhookHandler.invokeForListener(
+                OsmPl.discordLink.container.getMessage("discord.default", message),
+                player.name,
+                osm.configuration
+        )
+    }
+
     osm.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, object : PlayerListener() {
         override fun onPlayerChat(event: PlayerChatEvent?) {
             if (event != null) {
@@ -48,6 +72,8 @@ internal val PLAYER_CHAT = { osm: OsmPl ->
                 if (event.player.hasPermission("osm.coloredchat") || event.player.isOp)
                     event.message = event.message.replace("&", "§")
                 else event.message = ChatColor.stripColor(event.message)
+
+                sendDiscordMessage(event.player, event.message)
 
                 event.message = osm.defaultMessageContainer
                         .getMessage("chat.default", prefix, event.player.displayName, suffix, event.message)

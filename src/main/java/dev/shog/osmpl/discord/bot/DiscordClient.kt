@@ -95,23 +95,6 @@ internal fun DiscordLink.getBot() = object : IBot {
             .block()!!
 
     init {
-        osmPl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, object : PlayerListener() {
-            override fun onPlayerChat(event: PlayerChatEvent?) {
-                if (event != null) {
-                    if (!FakeOnline.instance.um.isAuthenticated(event.player.name) || DataManager.isUserMuted(event.player.name))
-                        return
-
-                    if (CursedDataHandler.isCursed(event.message.split(" "))) {
-                        event.player.sendMessage(container.getMessage("errors.everyone"))
-                        return
-                    }
-
-                    WebhookHandler
-                        . invokeForListener(container.getMessage("discord.default", event.message), event.player.name, osmPl.configuration)
-                }
-            }
-        }, Event.Priority.Normal, osmPl)
-
         osmPl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
             override fun onPlayerJoin(event: PlayerJoinEvent?) {
                 WebhookHandler.invokeForListener(container.getMessage("discord.join", event?.player?.name), event?.player?.name, osmPl.configuration)
