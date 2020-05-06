@@ -50,14 +50,6 @@ internal val MANAGE_TRUST_FACTOR = Command.make("tfm") {
             val user = args[1]
 
             when (manageType.toLowerCase()) {
-                "view" -> {
-                    if (DataManager.userExists(user)) {
-                        sendMessageHandler("trustfactor.view", user, DefaultTrustFactorHandler.viewTrust(user))
-                    } else sendMessageHandler("error.user-exists")
-
-                    true
-                }
-
                 "take" -> {
                     val amount = args[2].toIntOrNull() ?: return@make false
 
@@ -88,7 +80,7 @@ internal val MANAGE_TRUST_FACTOR = Command.make("tfm") {
             when (manageType.toLowerCase()) {
                 "view" -> {
                     if (DataManager.userExists(args[1])) {
-                        sendMessageHandler("trustfactor.view", sender.name, DefaultTrustFactorHandler.viewTrust(args[1]))
+                        sendMessageHandler("trustfactor.view", args[1], DefaultTrustFactorHandler.viewTrust(args[1]))
                     } else sendMessageHandler("error.user-exists")
 
                     true
