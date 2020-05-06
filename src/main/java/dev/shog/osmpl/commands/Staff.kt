@@ -25,7 +25,7 @@ internal val STAFF_COMMAND = Command.make("staff") {
     when {
         args.isEmpty() -> {
             STAFF_PREVIOUS_STATE.containsKey(sender.name.toLowerCase())
-                    .either(disableStaffMode(sender), enableStaffMode(sender))
+                    .either(disableStaffMode(), enableStaffMode())
         }
 
         args.size == 1 && args[0].equals("view", true) -> {
@@ -50,12 +50,15 @@ private val STAFF_PREVIOUS_STATE = ConcurrentHashMap<String, Pair<Array<ItemStac
 /**
  * Enable a staff mode for [player].
  */
-internal fun CommandContext.enableStaffMode(player: Player) {
-    STAFF_PREVIOUS_STATE[player.name.toLowerCase()] = Pair(player.inventory.contents, player.inventory.armorContents)
+internal fun CommandContext.enableStaffMode() {
+    require(sender is Player)
 
-    player.inventory.contents = Array(36) { ItemStack(0) }
-    player.inventory.armorContents = Array(4) { ItemStack(0) }
-    player.inventory.addItem(
+    STAFF_PREVIOUS_STATE[sender.name.toLowerCase()] = Pair(sender.inventory.contents, sender.inventory.armorContents)
+
+    sender.inventory.contents = Array(36) { ItemStack(0) }
+    sender.inventory.armorContents = Array(4) { ItemStack(0) }
+
+    sender.inventory.addItem(
             ItemStack(Material.BEDROCK, 1),
             ItemStack(Material.WOOD_AXE, 1),
             ItemStack(Material.COMPASS, 1),
@@ -86,9 +89,9 @@ internal fun disableStaffMode(player: Player) {
 /**
  * Disable a player's staff mode and regain their previous inventory.
  */
-internal fun CommandContext.disableStaffMode(player: Player) {
-    if (STAFF_PREVIOUS_STATE.containsKey(player.name.toLowerCase())) {
-        disableStaffMode(player)
+internal fun CommandContext.disableStaffMode() {
+    if (STAFF_PREVIOUS_STATE.containsKey(sender.name.toLowerCase())) {
+        disableStaffMode(sender as Player)
         sendMessageHandler("staff-mode.disabled")
     }
 }
