@@ -24,8 +24,9 @@ internal val STAFF_COMMAND = Command.make("staff") {
 
     when {
         args.isEmpty() -> {
-            STAFF_PREVIOUS_STATE.containsKey(sender.name.toLowerCase())
-                    .either(disableStaffMode(), enableStaffMode())
+            if (STAFF_PREVIOUS_STATE.containsKey(sender.name.toLowerCase())) {
+                disableStaffMode()
+            } else enableStaffMode()
         }
 
         args.size == 1 && args[0].equals("view", true) -> {
