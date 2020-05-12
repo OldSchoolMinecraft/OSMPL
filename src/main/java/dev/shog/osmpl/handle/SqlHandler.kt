@@ -15,7 +15,7 @@ internal object SqlHandler {
     /**
      * Form a connection using [url], [username], and [password].
      */
-    fun getConnection(): Connection {
+    fun getConnection(db: String = "quests"): Connection {
         if (url == "" || username == "" || password == "")
             throw Exception("SQL credentials are not properly filled out")
         else {
@@ -24,7 +24,7 @@ internal object SqlHandler {
             source.user = username
             source.password = password
             source.serverName = url
-            source.databaseName = "quests"
+            source.databaseName = db
 
             val con = source.connection
 

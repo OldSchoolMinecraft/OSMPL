@@ -17,6 +17,7 @@ import dev.shog.osmpl.handle.ConfigHandler
 import dev.shog.osmpl.handle.IpChecker
 import dev.shog.osmpl.handle.SlowMode
 import dev.shog.osmpl.handle.SqlHandler
+import dev.shog.osmpl.remote.RemoteRestart
 import dev.shog.osmpl.tf.MANAGE_TRUST_FACTOR
 import dev.shog.osmpl.tf.TrustFactorHookHandler
 import dev.shog.osmpl.tf.VIEW_PROGRESS
@@ -39,6 +40,7 @@ class OsmPl : OsmPlugin() {
 
         internal lateinit var slowMode: SlowMode
         internal lateinit var ipChecker: IpChecker
+        internal lateinit var remoteRestart: RemoteRestart
         internal lateinit var discordLink: DiscordLink
     }
 
@@ -73,6 +75,7 @@ class OsmPl : OsmPlugin() {
 
         ipChecker = IpChecker(configuration.getString("ipHubKey"))
         webHook = configuration.getString("webhook")
+        remoteRestart = RemoteRestart(this)
 
         slowMode.timing = configuration.getInt("slowModeInSec", 5).toLong()
 
