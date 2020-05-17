@@ -1,6 +1,12 @@
 package dev.shog.osmpl.discord.handle
 
+import dev.shog.osmpl.OsmPl
+import dev.shog.osmpl.api.OsmModule
+import dev.shog.osmpl.api.data.DataManager
+import kong.unirest.Config
 import kong.unirest.Unirest
+import me.moderator_man.fo.FakeOnline
+import org.bukkit.entity.Player
 import org.bukkit.util.config.Configuration
 import reactor.core.publisher.toMono
 
@@ -11,23 +17,42 @@ object WebhookHandler {
     /**
      * Invoke for a listener.
      */
-    fun invokeForListener(message: String, name: String?, configuration: Configuration) {
+    fun invokeForListener(message: String, name: String?, hook: String) {
         if (name != null) {
                 ImageHandler.getUserImage(name)
-                    .flatMap { image -> sendMessage(message, name, image, configuration) }
+                    .flatMap { image -> sendMessage(message, name, image, hook) }
                     .subscribe()
         }
     }
 
     /**
-     * Send a message through the webhook./
+     * Send the message.
+     */
+    fun sendDiscordMessage(player: Player, message: String) {
+        if (!FakeOnline.instance.um.isAuthenticated(player.name) || DataManager.isUserMuted(player.name))
+            return
+
+        if (CursedDataHandler.isCursed(message.split(" "))) {
+            player.sendMessage(OsmPl.discordLink.defaultMessageContainer.getMessage("errors.everyone"))
+            return
+        }
+
+        invokeForListener(
+                OsmPl.discordLink.defaultMessageContainer.getMessage("discord.default", message),
+                player.name,
+                OsmPl.discordLink.config.content.getString("url")
+        )
+    }
+
+    /**
+     * Send a message through the webhook.
      */
     private fun sendMessage(
         message: String,
         username: String,
         image: String,
-        cfg: Configuration
-    ) = Unirest.post(cfg.getString("botWebhook"))
+        hook: String
+    ) = Unirest.post(hook)
             .header("Content-Type", "application/json")
             .body(getJsonObject(username, image, message))
             .asEmptyAsync()

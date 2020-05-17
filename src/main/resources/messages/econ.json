@@ -1,0 +1,22 @@
+{
+    "savings": {
+        "no-bank": "§7You currently aren't in a bank. To get in a bank, and learn more about banks, use §8/bank§7.",
+        "no-savings": "§7You currently don't have any money saved. To add money, use §8/savings deposit $0.00§7.",
+        "not-enough-deposit": "§7You don't have enough money for this!",
+        "not-enough-withdraw": "§7You don't have enough money in your savings account for this!",
+        "withdraw": "§7You have successfully withdrawn §8${0}§7!",
+        "deposit": "§7You have successfully deposited §8${0}§7!",
+        "invalid-number": "§7The money amount should be in §8$0.00§7 format.",
+        "amount": "§7You currently have §8${0}§7 in your savings account."
+    },
+    "banks":{
+        "how-to": "§7First, view all available bank options using §8/banks list§7. If one catches your eye, you can view more about it using §8/banks about (bank number)§7. If you decide on a bank, you can join it using §8/banks join (bank number)§7. Make sure to pick the correct choice for you, since transferring banks costs {0}.",
+        "invalid": "§7A bank with that ID could not be found!",
+        "about": "§8{0}§7: §7You receive §8{1}§7 interest every §8{2}§7.",
+        "transfer": "§7You are already a member of a bank! To change, you must use §8/banks transfer (bank number)§7. This will also cost you §8{0}§7.",
+        "joined": "§7You have successfully become a member of §8{0}§7 bank!",
+        "transfer-s": "§7You have successfully transfered to §8{0}§7 bank!",
+        "no-transfer": "§7You cannot transfer banks when you haven't joined one!",
+        "current": "§7You're currently a member of the §8{0}§7 bank."
+    }
+}

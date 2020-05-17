@@ -110,46 +110,44 @@ object TrustFactorHookHandler {
      * Fill the remaining [hooks].
      */
     fun fillRemaining(plugin: JavaPlugin) {
-        when {
-            !hooks.containsKey(RequiredHookTypes.MOVE) -> {
-                plugin.server.pluginManager.registerEvent(Event.Type.PLAYER_MOVE, object: PlayerListener() {
-                    override fun onPlayerMove(event: PlayerMoveEvent?) {
-                        if (event != null) {
-                            invokeHook(RequiredHookTypes.MOVE, TrustFactorHookHandler::class.java, event)
-                        }
+        if (!hooks.containsKey(RequiredHookTypes.MOVE)) {
+            plugin.server.pluginManager.registerEvent(Event.Type.PLAYER_MOVE, object: PlayerListener() {
+                override fun onPlayerMove(event: PlayerMoveEvent?) {
+                    if (event != null) {
+                        invokeHook(RequiredHookTypes.MOVE, TrustFactorHookHandler::class.java, event)
                     }
-                }, Event.Priority.Normal, plugin)
-            }
+                }
+            }, Event.Priority.Normal, plugin)
+        }
 
-            !hooks.containsKey(RequiredHookTypes.BREAK) -> {
-                plugin.server.pluginManager.registerEvent(Event.Type.BLOCK_BREAK, object: BlockListener() {
-                    override fun onBlockBreak(event: BlockBreakEvent?) {
-                        if (event != null) {
-                            invokeHook(RequiredHookTypes.BREAK, TrustFactorHookHandler::class.java, event)
-                        }
+        if (!hooks.containsKey(RequiredHookTypes.BREAK)) {
+            plugin.server.pluginManager.registerEvent(Event.Type.BLOCK_BREAK, object: BlockListener() {
+                override fun onBlockBreak(event: BlockBreakEvent?) {
+                    if (event != null) {
+                        invokeHook(RequiredHookTypes.BREAK, TrustFactorHookHandler::class.java, event)
                     }
-                }, Event.Priority.Normal, plugin)
-            }
+                }
+            }, Event.Priority.Normal, plugin)
+        }
 
-            !hooks.containsKey(RequiredHookTypes.PLACE) -> {
-                plugin.server.pluginManager.registerEvent(Event.Type.BLOCK_PLACE, object: BlockListener() {
-                    override fun onBlockPlace(event: BlockPlaceEvent?) {
-                        if (event != null) {
-                            invokeHook(RequiredHookTypes.PLACE, TrustFactorHookHandler::class.java, event)
-                        }
+        if (!hooks.containsKey(RequiredHookTypes.PLACE)) {
+            plugin.server.pluginManager.registerEvent(Event.Type.BLOCK_PLACE, object: BlockListener() {
+                override fun onBlockPlace(event: BlockPlaceEvent?) {
+                    if (event != null) {
+                        invokeHook(RequiredHookTypes.PLACE, TrustFactorHookHandler::class.java, event)
                     }
-                }, Event.Priority.Normal, plugin)
-            }
+                }
+            }, Event.Priority.Normal, plugin)
+        }
 
-            !hooks.containsKey(RequiredHookTypes.KILL) -> {
-                plugin.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object: EntityListener() {
-                    override fun onEntityDeath(event: EntityDeathEvent?) {
-                        if (event != null) {
-                            invokeHook(RequiredHookTypes.KILL, TrustFactorHookHandler::class.java, event)
-                        }
+        if (!hooks.containsKey(RequiredHookTypes.KILL)) {
+            plugin.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object: EntityListener() {
+                override fun onEntityDeath(event: EntityDeathEvent?) {
+                    if (event != null) {
+                        invokeHook(RequiredHookTypes.KILL, TrustFactorHookHandler::class.java, event)
                     }
-                }, Event.Priority.Normal, plugin)
-            }
+                }
+            }, Event.Priority.Normal, plugin)
         }
     }
 

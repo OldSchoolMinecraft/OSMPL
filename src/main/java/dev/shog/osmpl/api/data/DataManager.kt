@@ -6,6 +6,7 @@ import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.defaultFormat
 import dev.shog.osmpl.fancyDate
 import dev.shog.osmpl.sendWebhookMessage
+import dev.shog.osmpl.tf.DefaultTrustFactorHandler
 import org.bukkit.entity.Player
 import java.io.File
 
@@ -182,12 +183,12 @@ object DataManager {
 
             data.punishments = punishments
 
-            when (punishment.type) {
-                PunishmentType.BAN ->
-                    data.currentBan = punishment
+            DefaultTrustFactorHandler.handlePunishment(user, punishment.type, punishment.expire == -1L) // handle TF update
 
-                PunishmentType.MUTE ->
-                    data.currentMute = punishment
+            when (punishment.type) {
+                PunishmentType.BAN -> data.currentBan = punishment
+
+                PunishmentType.MUTE -> data.currentMute = punishment
             }
         }
     }

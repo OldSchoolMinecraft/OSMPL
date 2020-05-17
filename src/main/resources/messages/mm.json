@@ -1,0 +1,9 @@
+{
+    "module": {
+        "list": "OSMPL Modules: {0}",
+        "enabled": "{0} has been enabled!",
+        "disabled": "{0} has been disabled!",
+        "enable-not-found": "A disabled module with that name could not be found!",
+        "disable-not-found": "An enabled module with that name could not be found!"
+    }
+}

@@ -1,37 +1,52 @@
 package dev.shog.osmpl.discord
 
-import dev.shog.osmpl.OsmPl
+import dev.shog.osmpl.api.OsmModule
+import dev.shog.osmpl.api.OsmPlugin
+import dev.shog.osmpl.api.cfg.Configuration
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.msg.MessageContainer
+import dev.shog.osmpl.api.msg.sendMessage
 import dev.shog.osmpl.discord.bot.getBot
 import dev.shog.osmpl.discord.handle.CursedDataHandler
-import dev.shog.osmpl.handle.ConfigHandler
-import dev.shog.osmpl.sendMessage
 import discord4j.core.GatewayDiscordClient
 import org.bukkit.ChatColor
 
 /**
  * Main class
  */
-internal class DiscordLink(val osmPl: OsmPl) {
-    val client: GatewayDiscordClient
-    val container = MessageContainer.fromFile("dl-messages.json")
+internal class DiscordLink(pl: OsmPlugin): OsmModule("discordlink", 1.0F, pl) {
+    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/dl.json")
 
-    init {
-        ConfigHandler
+    companion object {
+        lateinit var client: GatewayDiscordClient
+    }
 
-        osmPl.commands.add(Command.make("discordlink") {
+    override fun onEnable() {
+        if (!config.has("token", "channel", "url")) {
+            config.content.put("token", "Paste Discord bot token here :)")
+            config.content.put("channel", "Paste #minecraft-chat channel ID here :)")
+            config.content.put("url", "Paste the #minecraft-chat webhook here :)")
+
+            System.err.println("[OSMPL:DL] The config is not properly filled out!")
+
+            config.save()
+            pl.disableModule(this)
+
+            return
+        }
+
+        commands.add(Command.make("discordlink") {
             sendMessage("${ChatColor.GRAY}DiscordLink from OSMPL")
             true
         })
 
-        osmPl.commands.add(Command.make("cursed") {
+        commands.add(Command.make("cursed") {
             val cursed = CursedDataHandler.getCursed()
 
             return@make when {
                 args.isEmpty() -> {
                     sender.sendMessage(
-                            container.getMessage(
+                            defaultMessageContainer.getMessage(
                                     "commands.cursed.default", cursed.asSequence().joinToString(", ").removeSuffix(", ")
                             ))
 
@@ -44,10 +59,10 @@ internal class DiscordLink(val osmPl: OsmPl) {
                             val word = args[1]
 
                             if (cursed.contains(word.toLowerCase())) {
-                                sender.sendMessage(container.getMessage("commands.cursed.already-exists"))
+                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.already-exists"))
                             } else {
                                 CursedDataHandler.addCursed(word)
-                                sender.sendMessage(container.getMessage("commands.cursed.added", word))
+                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.added", word))
                             }
 
                             true
@@ -57,10 +72,10 @@ internal class DiscordLink(val osmPl: OsmPl) {
                             val word = args[1]
 
                             if (!cursed.contains(word.toLowerCase())) {
-                                sender.sendMessage(container.getMessage("commands.cursed.doesnt-exist"))
+                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.doesnt-exist"))
                             } else {
                                 CursedDataHandler.removeCursed(word)
-                                sender.sendMessage(container.getMessage("commands.cursed.removed", word))
+                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.removed", word))
                             }
 
                             true
@@ -75,6 +90,18 @@ internal class DiscordLink(val osmPl: OsmPl) {
         })
 
 
-        client = getBot().getClient()
+        pl.server.scheduler.scheduleAsyncDelayedTask(pl) {
+            client = getBot().getClient()
+        }
     }
+
+    override fun onDisable() {
+        config.save()
+    }
+
+    override fun onRefresh() {
+        config.refreshContent()
+    }
+
+    override val config: Configuration = Configuration(this)
 }

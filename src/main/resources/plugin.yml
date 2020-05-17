@@ -112,6 +112,17 @@ commands:
         usage: /cursed [add/remove] {word}
         permission-message: You do not have permission for this!
         permission: osm.dl.cursed
+    module:
+        description: Manage Modules
+        usage: /module [enable/disable] {module name}
+        permission-message: You do not have permission for this!
+        permission: osm.mm
+    savings:
+        description: Manage your savings account.
+        usage: /savings [withdraw/deposit] {amount}
+    banks:
+        description: Manage your bank membership.
+        usage: /bank [join/transfer]
 permissions:
     osm.vtfp:
         description: Allow you to view trust factor progress.
@@ -172,4 +183,7 @@ permissions:
         default: op
     osm.dl.cursed:
         description: Manage cursed words.
+        default: op
+    osm.mm:
+        description: Manage modules.
         default: op

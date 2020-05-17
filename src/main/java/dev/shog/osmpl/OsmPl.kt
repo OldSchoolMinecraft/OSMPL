@@ -1,110 +1,56 @@
 package dev.shog.osmpl
 
+import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.api.OsmPlugin
-import dev.shog.osmpl.api.cmd.CommandRunner
-import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.api.msg.MessageContainer
-import dev.shog.osmpl.commands.*
-import dev.shog.osmpl.commands.impl.OsmCommand
-import dev.shog.osmpl.commands.punish.*
-import dev.shog.osmpl.commands.raffle.RAFFLE_COMMAND
 import dev.shog.osmpl.discord.DiscordLink
-import dev.shog.osmpl.events.*
-import dev.shog.osmpl.events.data.PLAYER_DATA_MANAGER
-import dev.shog.osmpl.handle.*
-import dev.shog.osmpl.handle.BedEvents
-import dev.shog.osmpl.handle.ConfigHandler
-import dev.shog.osmpl.handle.IpChecker
-import dev.shog.osmpl.handle.SlowMode
-import dev.shog.osmpl.handle.SqlHandler
-import dev.shog.osmpl.remote.RemoteRestart
-import dev.shog.osmpl.tf.MANAGE_TRUST_FACTOR
-import dev.shog.osmpl.tf.TrustFactorHookHandler
-import dev.shog.osmpl.tf.VIEW_PROGRESS
-import org.bukkit.event.Event
-import org.bukkit.plugin.java.JavaPlugin
-import ru.tehkode.permissions.bukkit.PermissionsEx
-import java.util.concurrent.TimeUnit
+import dev.shog.osmpl.mm.ModuleManager
+import dev.shog.osmpl.money.EconomyModule
+import dev.shog.osmpl.api.RemoteRestart
+import dev.shog.osmpl.tf.TrustFactorModule
+import dev.shog.osmpl.util.UtilModule
 
+
+/**
+ * The main plugin.
+ */
 class OsmPl : OsmPlugin() {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages.json")
+    companion object {
+        /**
+         * The [DiscordLink] module. This is in the companion due to it being required at the WebhookHandler.
+         */
+        internal lateinit var discordLink: DiscordLink
+
+        /**
+         * [RemoteRestart]
+         */
+        internal lateinit var remoteRestart: RemoteRestart
+    }
+
+    private val container = MessageContainer.fromFile("messages/osmpl.json")
 
     init {
-        commands.addAll(setOf(
-                DISCORD, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, MANAGE_TRUST_FACTOR, VIEW_PROGRESS
-        ))
-    }
-
-    companion object {
-        const val VERSION = 2.8F
-
-        internal lateinit var slowMode: SlowMode
-        internal lateinit var ipChecker: IpChecker
-        internal lateinit var remoteRestart: RemoteRestart
-        internal lateinit var discordLink: DiscordLink
-    }
-
-    override fun onEnable() {
-        println("OSMPL has been enabled!")
-        DataManager
-
-        slowMode = SlowMode(this)
-
-        try {
-            PermissionsEx.getPermissionManager()
-        } catch (ex: Exception) {
-            System.err.println("PermissionsEX was not found, disabling OSM!")
-            pluginLoader.disablePlugin(this)
-        }
-
-        configuration.load()
-
-        if (!ConfigHandler.hasValidProperties(configuration)) {
-            System.err.println("OSMPL: Please fill out the config file!")
-
-            ConfigHandler.fillProperties(configuration)
-            configuration.save()
-            pluginLoader.disablePlugin(this)
-
-            return
-        }
-
-        SqlHandler.url = configuration.getString("url")
-        SqlHandler.username = configuration.getString("username")
-        SqlHandler.password = configuration.getString("password")
-
-        ipChecker = IpChecker(configuration.getString("ipHubKey"))
-        webHook = configuration.getString("webhook")
-        remoteRestart = RemoteRestart(this)
-
-        slowMode.timing = configuration.getInt("slowModeInSec", 5).toLong()
-
-        sequenceOf(ENTITY_DEATH, STAFF_DISABLE, PLAYER_DATA_MANAGER, PLAYER_CHAT, SLOW_MODE_AUTO_TOGGLE, ON_VIEW_LOCKETTE, BLOCK_PLACE)
-                .forEach { it.invoke(this) }
-
-        val ev = BedEvents(this)
-
-        server.pluginManager.registerEvent(Event.Type.PLAYER_BED_LEAVE, ev, Event.Priority.Normal, this)
-        server.pluginManager.registerEvent(Event.Type.PLAYER_BED_ENTER, ev, Event.Priority.Normal, this)
-
         discordLink = DiscordLink(this)
-        CommandRunner(this)
 
-        TrustFactorHookHandler.fillRemaining(this) // Currently not hooking into OSMQ
+        initRemoteRestart()
     }
 
     /**
-     * Add commands to OSM
+     * Set [remoteRestart]
      */
-    private fun addCommands(vararg command: OsmCommand) {
-        command.forEach { cmd ->
-            getCommand(cmd.name).executor = cmd.getCommandExecutor(this)
-        }
+    private fun initRemoteRestart() {
+        remoteRestart = RemoteRestart(this, container)
+        println("[OSMPL] Remote restart is open at http://localhost:8010/restart")
     }
 
-    override fun onDisable() {
-        println("OSMPL has been disabled")
-        DataManager.saveAll()
-        TrustFactorHookHandler.save()
-    }
+    override val modules: HashMap<OsmModule, Boolean> =
+            hashMapOf(
+                    UtilModule(this) to true,
+                    discordLink to true,
+                    EconomyModule(this) to true,
+                    ModuleManager(this) to true,
+                    TrustFactorModule(this) to true
+            )
+
+    override val requiredConfig: Collection<String> = setOf("username", "password", "url")
 }

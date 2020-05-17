@@ -1,6 +1,6 @@
 package dev.shog.osmpl.tf
 
-import dev.shog.osmpl.handle.SqlHandler
+import dev.shog.osmpl.api.SqlHandler
 import dev.shog.osmpl.tf.inf.TrustFactorUser
 
 /**

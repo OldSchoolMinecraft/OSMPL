@@ -1,9 +1,12 @@
 package dev.shog.osmpl.tf
 
+import dev.shog.osmpl.api.data.punishments.Punishment
+import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.tf.inf.TrustFactorHandler
 import dev.shog.osmpl.tf.inf.TrustFactorModifier
 import dev.shog.osmpl.tf.inf.TrustFactorUser
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToInt
 
 /**
  * The default trust factor handler.
@@ -86,5 +89,28 @@ object DefaultTrustFactorHandler: TrustFactorHandler {
         val user = DefaultTrustFactorUser.getUser(name)
         userCache[lName] = user
         return user
+    }
+
+    /**
+     * Handle a punishment.
+     */
+    fun handlePunishment(user: String, punishment: PunishmentType, permanent: Boolean) {
+        when (punishment) {
+            PunishmentType.BAN -> {
+                val userTrust = viewTrust(user)
+
+                if (permanent)
+                    removeTrust(user, userTrust) // Remove all trust factor
+                else removeTrust(user, (userTrust * 0.75).roundToInt())
+            }
+
+            PunishmentType.MUTE -> {
+                val userTrust = viewTrust(user)
+
+                if (permanent)
+                    removeTrust(user, (userTrust * 0.75).roundToInt())
+                else removeTrust(user, (userTrust * 0.25).roundToInt())
+            }
+        }
     }
 }

@@ -1,25 +1,21 @@
 package dev.shog.osmpl.discord.bot
 
-import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.discord.DiscordLink
-import dev.shog.osmpl.discord.getProperContent
-import dev.shog.osmpl.discord.handle.CursedDataHandler
 import dev.shog.osmpl.discord.handle.WebhookHandler
 import discord4j.core.DiscordClient
 import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.message.MessageCreateEvent
-import me.moderator_man.fo.FakeOnline
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityListener
-import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerListener
 import org.bukkit.event.player.PlayerQuitEvent
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toFlux
+import reactor.core.publisher.toMono
 
 /**
  * Get the bot.
@@ -31,7 +27,9 @@ internal fun DiscordLink.getBot() = object : IBot {
     private val commands = HashMap<String, MessageCreateEvent.(server: Server) -> Mono<*>>().apply {
         put("!online") {
             message.channel
-                    .flatMap { ch -> ch.createMessage(container.getMessage("commands.online", it.onlinePlayers.size.toString())) }
+                    .flatMap { ch ->
+                        ch.createMessage(defaultMessageContainer.getMessage("commands.online", it.onlinePlayers.size.toString()))
+                    }
         }
 
         put("!list") { server ->
@@ -42,12 +40,50 @@ internal fun DiscordLink.getBot() = object : IBot {
 
             message.channel
                     .flatMap { ch -> ch.createMessage(
-                            container.getMessage("commands.list",
+                            defaultMessageContainer.getMessage("commands.list",
                                     server.onlinePlayers.size.toString(),
                                     str
                             )) }
         }
     }
+
+    /**
+     * Replace @'s to user name
+     */
+    fun getProperContent(e: MessageCreateEvent, dl: DiscordLink): Mono<String> = e.message.content.toMono()
+            .flatMap { cnt ->
+                e.message.userMentions
+                        .collectList()
+                        .map { list ->
+                            var repl = cnt
+
+                            for (en in list) {
+                                repl = repl.replace("<@!${en.id.asLong()}>", dl.defaultMessageContainer.getMessage(
+                                        "mentions.user",
+                                        en.username,
+                                        en.discriminator
+                                ))
+                            }
+
+                            repl
+                        }
+            }
+            .flatMap { cnt ->
+                e.message.roleMentions
+                        .collectList()
+                        .map { list ->
+                            var repl = cnt
+
+                            for (en in list) {
+                                repl = repl.replace(en.mention, dl.defaultMessageContainer.getMessage(
+                                        "mentions.channel",
+                                        en.name
+                                ))
+                            }
+
+                            repl
+                        }
+            }
 
     /**
      * Execute Discord commands from [messageCreateEvent].
@@ -64,7 +100,7 @@ internal fun DiscordLink.getBot() = object : IBot {
     }
 
     private val CLIENT: GatewayDiscordClient = DiscordClient
-            .create(osmPl.configuration.getString("botToken"))
+            .create(config.content.getString("token"))
             .gateway()
             .login()
             .doOnNext {
@@ -75,14 +111,14 @@ internal fun DiscordLink.getBot() = object : IBot {
                                     .map { user -> user.id }
                                     .map { id -> e.member.get().id != id }
                         }
-                        .doOnNext { e -> execCommands(e, osmPl.server).subscribe() }
-                        .filter { e -> e.message.channelId.asLong() == osmPl.configuration.getString("botChannel").toLongOrNull() }
+                        .doOnNext { e -> execCommands(e, pl.server).subscribe() }
+                        .filter { e -> e.message.channelId.asLong() == config.content.getLong("channel") }
                         .filter { e -> !e.message.content.startsWith("!") }
                         .flatMap { e ->
                             getProperContent(e, this@getBot)
                                     .doOnNext { content ->
-                                        osmPl.server.broadcastMessage(
-                                                container.getMessage("minecraft.default",
+                                        pl.server.broadcastMessage(
+                                                defaultMessageContainer.getMessage("minecraft.default",
                                                         e.member.get().username,
                                                         e.member.get().discriminator,
                                                         content
@@ -95,27 +131,39 @@ internal fun DiscordLink.getBot() = object : IBot {
             .block()!!
 
     init {
-        osmPl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
+        pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
             override fun onPlayerJoin(event: PlayerJoinEvent?) {
-                WebhookHandler.invokeForListener(container.getMessage("discord.join", event?.player?.name), event?.player?.name, osmPl.configuration)
+                WebhookHandler.invokeForListener(
+                        defaultMessageContainer.getMessage("discord.join", event?.player?.name),
+                        event?.player?.name,
+                        config.content.getString("url")
+                )
             }
-        }, Event.Priority.Normal, osmPl)
+        }, Event.Priority.Normal, pl)
 
-        osmPl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
+        pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
             override fun onPlayerQuit(event: PlayerQuitEvent?) {
-                WebhookHandler.invokeForListener(container.getMessage("discord.leave", event?.player?.name), event?.player?.name, osmPl.configuration)
+                WebhookHandler.invokeForListener(
+                        defaultMessageContainer.getMessage("discord.leave", event?.player?.name),
+                        event?.player?.name,
+                        config.content.getString("url")
+                )
             }
-        }, Event.Priority.Normal, osmPl)
+        }, Event.Priority.Normal, pl)
 
-        osmPl.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object : EntityListener() {
+        pl.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object : EntityListener() {
             override fun onEntityDeath(event: EntityDeathEvent?) {
                 if (event?.entity is Player) {
                     val player = event.entity as Player
 
-                    WebhookHandler.invokeForListener(container.getMessage("discord.death", player.name), player.name, osmPl.configuration)
+                    WebhookHandler.invokeForListener(
+                            defaultMessageContainer.getMessage("discord.death", player.name),
+                            player.name,
+                            config.content.getString("url")
+                    )
                 }
             }
-        }, Event.Priority.Normal, osmPl)
+        }, Event.Priority.Normal, pl)
     }
 
     override fun getClient(): GatewayDiscordClient =
