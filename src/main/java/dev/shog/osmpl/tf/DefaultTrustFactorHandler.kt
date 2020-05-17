@@ -1,10 +1,10 @@
 package dev.shog.osmpl.tf
 
-import dev.shog.osmpl.api.data.punishments.Punishment
 import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.tf.inf.TrustFactorHandler
 import dev.shog.osmpl.tf.inf.TrustFactorModifier
 import dev.shog.osmpl.tf.inf.TrustFactorUser
+import ru.tehkode.permissions.bukkit.PermissionsEx
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
@@ -20,6 +20,21 @@ object DefaultTrustFactorHandler: TrustFactorHandler {
                 override val amount: Int = 0
                 override fun applyTo(name: String) { }
                 override fun unApplyTo(name: String) { }
+            },
+
+            /**
+             * 500 TF = bypassing lava restrictions
+             */
+            object: TrustFactorModifier {
+                override val amount: Int = 500
+
+                override fun applyTo(name: String) {
+                    PermissionsEx.getPermissionManager().getUser(name).addPermission("osm.bypasslava")
+                }
+
+                override fun unApplyTo(name: String) {
+                    PermissionsEx.getPermissionManager().getUser(name).removePermission("osm.bypasslava")
+                }
             }
     )
 

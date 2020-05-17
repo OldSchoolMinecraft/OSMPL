@@ -1,6 +1,5 @@
 package dev.shog.osmpl.util.events.data
 
-import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.api.data.User
 import dev.shog.osmpl.api.data.isExpired
@@ -22,26 +21,26 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerLoginEvent) {
 
     if (ban != null) {
         if (ban.isExpired()) {
-            pl.server.broadcastPermission(defaultMessageContainer.getMessage("admin.expired.ban", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.ban", event.player.name), "osm.notify.ban")
 
             data.currentBan = null
         } else {
-            pl.server.broadcastPermission(defaultMessageContainer.getMessage("admin.tried.ban", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.ban", event.player.name), "osm.notify.ban")
 
             val message = when {
                 ban.expire == -1L ->
-                    defaultMessageContainer.getMessage("banned.permanent", ban.reason)
+                    messageContainer.getMessage("banned.permanent", ban.reason)
 
                 ban.expire != -1L ->
-                    defaultMessageContainer.getMessage("banned.timed", ban.reason, ban.expire.defaultFormat())
+                    messageContainer.getMessage("banned.timed", ban.reason, ban.expire.defaultFormat())
 
                 else ->
-                    defaultMessageContainer.getMessage("banned.invalid")
+                    messageContainer.getMessage("banned.invalid")
             }
 
             if (message.length > 100) {
                 // If the message is over 100 (the allowed amount), slim it down.
-                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, defaultMessageContainer.getMessage("banned.invalid"))
+                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, messageContainer.getMessage("banned.invalid"))
             } else event.disallow(PlayerLoginEvent.Result.KICK_BANNED, message)
         }
     }
@@ -63,17 +62,17 @@ internal fun OsmModule.handleCommandMute(data: User?, event: PlayerCommandPrepro
                 .contains(true)
 
         if (bannedCmd) {
-            pl.server.broadcastPermission(defaultMessageContainer.getMessage("admin.tried.mute-command", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.mute-command", event.player.name), "osm.notify.ban")
 
             val message = when {
                 mute.expire == -1L ->
-                    defaultMessageContainer.getMessage("muted.permanent", mute.reason)
+                    messageContainer.getMessage("muted.permanent", mute.reason)
 
                 mute.expire != -1L ->
-                    defaultMessageContainer.getMessage("muted.timed", mute.reason, mute.expire.defaultFormat())
+                    messageContainer.getMessage("muted.timed", mute.reason, mute.expire.defaultFormat())
 
                 else ->
-                    defaultMessageContainer.getMessage("muted.invalid")
+                    messageContainer.getMessage("muted.invalid")
             }
 
             event.isCancelled = true
@@ -90,23 +89,23 @@ internal fun OsmModule.handleMute(data: User?, event: PlayerChatEvent) {
 
     if (mute != null) {
         if (mute.isExpired()) {
-            pl.server.broadcastPermission(defaultMessageContainer.getMessage("admin.expired.mute", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.mute", event.player.name), "osm.notify.ban")
 
             data.currentMute = null
 
-            event.player.sendMessage(defaultMessageContainer.getMessage("admin.expired.player-mute", event.player.name))
+            event.player.sendMessage(messageContainer.getMessage("admin.expired.player-mute", event.player.name))
         } else {
-            pl.server.broadcastPermission(defaultMessageContainer.getMessage("admin.tried.mute", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.mute", event.player.name), "osm.notify.ban")
 
             val message = when {
                 mute.expire == -1L ->
-                    defaultMessageContainer.getMessage("muted.permanent", mute.reason)
+                    messageContainer.getMessage("muted.permanent", mute.reason)
 
                 mute.expire != -1L ->
-                    defaultMessageContainer.getMessage("muted.timed", mute.reason, mute.expire.defaultFormat())
+                    messageContainer.getMessage("muted.timed", mute.reason, mute.expire.defaultFormat())
 
                 else ->
-                    defaultMessageContainer.getMessage("muted.invalid")
+                    messageContainer.getMessage("muted.invalid")
             }
 
             event.isCancelled = true

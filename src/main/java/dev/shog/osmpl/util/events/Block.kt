@@ -1,8 +1,6 @@
 package dev.shog.osmpl.util.events
 
-import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.OsmModule
-import dev.shog.osmpl.api.OsmPlugin
 import dev.shog.osmpl.hasPermissionOrOp
 import org.bukkit.Material
 import org.bukkit.event.Event

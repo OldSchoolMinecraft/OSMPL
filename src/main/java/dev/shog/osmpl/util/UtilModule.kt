@@ -38,7 +38,7 @@ import org.bukkit.event.Event
 import ru.tehkode.permissions.bukkit.PermissionsEx
 
 class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/util.json")
+    override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/util.json")
 
     init {
         commands.addAll(setOf(

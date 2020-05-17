@@ -12,7 +12,7 @@ abstract class OsmModule(val name: String, val version: Float, val pl: OsmPlugin
     /**
      * The default message container for commands.
      */
-    abstract val defaultMessageContainer: MessageContainer
+    abstract val messageContainer: MessageContainer
 
     /**
      * A list of commands for the [OsmModule].

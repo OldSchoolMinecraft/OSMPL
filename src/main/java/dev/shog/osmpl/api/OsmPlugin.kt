@@ -37,6 +37,13 @@ abstract class OsmPlugin : JavaPlugin() {
     }
 
     /**
+     * Refresh a module
+     */
+    fun refreshModule(module: OsmModule) {
+        module.onRefresh()
+    }
+
+    /**
      * Disable a module.
      */
     fun disableModule(module: OsmModule) {
@@ -86,7 +93,7 @@ abstract class OsmPlugin : JavaPlugin() {
             else {
                 command.executor = CommandExecutor { sender, cmd, _, args ->
                     osmCmd.execute(
-                            CommandContext(sender, args.toList(), cmd, module, module.defaultMessageContainer)
+                            CommandContext(sender, args.toList(), cmd, module, module.messageContainer)
                     )
                 }
             }

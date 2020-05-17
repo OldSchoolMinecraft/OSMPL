@@ -8,6 +8,11 @@ import java.util.concurrent.CompletableFuture
  */
 object OsmApi {
     /**
+     * Cache of donors.
+     */
+    var cache: List<String> = listOf()
+
+    /**
      * Get all donors of OSM.
      *
      * @return List of usernames of donors.
@@ -17,11 +22,15 @@ object OsmApi {
                     .asJsonAsync()
                     .handleAsync { http, _ -> http.body.`object`.getJSONArray("donators") }
                     .handleAsync { donors, _ ->
-                        donors
+                        val list = donors
                                 .toList()
                                 .asSequence()
                                 .map { any -> any.toString() }
                                 .toList()
+
+                        cache = list
+
+                        list
                     }
 
     /**
@@ -29,7 +38,10 @@ object OsmApi {
      *
      * @return If the user is a donor.
      */
-    fun isDonor(user: String): CompletableFuture<Boolean> =
-            getDonors()
-                    .handleAsync{ list, _ -> list.contains(user) }
+    fun isDonor(user: String): Boolean {
+        if (cache.isEmpty())
+            getDonors().join()
+
+        return cache.contains(user)
+    }
 }

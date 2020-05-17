@@ -30,6 +30,19 @@ val MODULE_COMMAND = Command.make("module") {
             return@make true
         }
 
+        "refresh" -> {
+            val module = osmModule.pl.modules.asSequence().singleOrNull { it.key.name.equals(args[1], true) && it.value }
+
+            if (module == null)
+                sendMessageHandler("module.disable-not-found")
+            else {
+                osmModule.pl.refreshModule(module.key)
+                sendMessageHandler("module.refreshed", module.key.name)
+            }
+
+            return@make true
+        }
+
         "disable" -> {
             val module = osmModule.pl.modules.asSequence().singleOrNull { it.key.name.equals(args[1], true) && it.value }
 

@@ -27,13 +27,13 @@ internal class BedEvents(private val osmPl: OsmModule) : PlayerListener() {
                 if (sleeping >= size / 2) {
                     server.getWorld("world").time = 1000
 
-                    server.broadcastMessage(osmPl.defaultMessageContainer.getMessage(
+                    server.broadcastMessage(osmPl.messageContainer.getMessage(
                             "sleep.complete",
                             sleeping.toString(),
                             size.toString()
                     ))
                 } else {
-                    server.broadcastMessage(osmPl.defaultMessageContainer.getMessage(
+                    server.broadcastMessage(osmPl.messageContainer.getMessage(
                             "sleep.part",
                             event.player.name, "${size / 2 - sleeping}"
                     ))
@@ -56,7 +56,7 @@ internal class BedEvents(private val osmPl: OsmModule) : PlayerListener() {
                 if (canSleep(server.getWorld("world"))) {
                     val size = server.onlinePlayers.size
 
-                    server.broadcastMessage(osmPl.defaultMessageContainer.getMessage(
+                    server.broadcastMessage(osmPl.messageContainer.getMessage(
                             "sleep.left",
                             event.player.name,
                             "${size / 2 - sleepingPlayers.size}"

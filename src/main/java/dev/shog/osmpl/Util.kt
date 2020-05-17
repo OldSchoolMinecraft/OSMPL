@@ -1,8 +1,6 @@
 package dev.shog.osmpl
 
 import kong.unirest.Unirest
-import me.moderator_man.fo.FakeOnline
-import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.util.config.Configuration
 import org.json.JSONObject

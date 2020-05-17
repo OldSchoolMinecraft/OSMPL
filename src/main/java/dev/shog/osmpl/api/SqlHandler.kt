@@ -1,8 +1,6 @@
 package dev.shog.osmpl.api
 
 import com.mysql.cj.jdbc.MysqlDataSource
-import dev.shog.osmpl.OsmPl
-import java.lang.Exception
 import java.sql.Connection
 
 /**

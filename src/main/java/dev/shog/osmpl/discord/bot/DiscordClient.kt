@@ -28,7 +28,7 @@ internal fun DiscordLink.getBot() = object : IBot {
         put("!online") {
             message.channel
                     .flatMap { ch ->
-                        ch.createMessage(defaultMessageContainer.getMessage("commands.online", it.onlinePlayers.size.toString()))
+                        ch.createMessage(messageContainer.getMessage("commands.online", it.onlinePlayers.size.toString()))
                     }
         }
 
@@ -40,7 +40,7 @@ internal fun DiscordLink.getBot() = object : IBot {
 
             message.channel
                     .flatMap { ch -> ch.createMessage(
-                            defaultMessageContainer.getMessage("commands.list",
+                            messageContainer.getMessage("commands.list",
                                     server.onlinePlayers.size.toString(),
                                     str
                             )) }
@@ -58,7 +58,7 @@ internal fun DiscordLink.getBot() = object : IBot {
                             var repl = cnt
 
                             for (en in list) {
-                                repl = repl.replace("<@!${en.id.asLong()}>", dl.defaultMessageContainer.getMessage(
+                                repl = repl.replace("<@!${en.id.asLong()}>", dl.messageContainer.getMessage(
                                         "mentions.user",
                                         en.username,
                                         en.discriminator
@@ -75,7 +75,7 @@ internal fun DiscordLink.getBot() = object : IBot {
                             var repl = cnt
 
                             for (en in list) {
-                                repl = repl.replace(en.mention, dl.defaultMessageContainer.getMessage(
+                                repl = repl.replace(en.mention, dl.messageContainer.getMessage(
                                         "mentions.channel",
                                         en.name
                                 ))
@@ -118,7 +118,7 @@ internal fun DiscordLink.getBot() = object : IBot {
                             getProperContent(e, this@getBot)
                                     .doOnNext { content ->
                                         pl.server.broadcastMessage(
-                                                defaultMessageContainer.getMessage("minecraft.default",
+                                                messageContainer.getMessage("minecraft.default",
                                                         e.member.get().username,
                                                         e.member.get().discriminator,
                                                         content
@@ -134,7 +134,7 @@ internal fun DiscordLink.getBot() = object : IBot {
         pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
             override fun onPlayerJoin(event: PlayerJoinEvent?) {
                 WebhookHandler.invokeForListener(
-                        defaultMessageContainer.getMessage("discord.join", event?.player?.name),
+                        messageContainer.getMessage("discord.join", event?.player?.name),
                         event?.player?.name,
                         config.content.getString("url")
                 )
@@ -144,7 +144,7 @@ internal fun DiscordLink.getBot() = object : IBot {
         pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
             override fun onPlayerQuit(event: PlayerQuitEvent?) {
                 WebhookHandler.invokeForListener(
-                        defaultMessageContainer.getMessage("discord.leave", event?.player?.name),
+                        messageContainer.getMessage("discord.leave", event?.player?.name),
                         event?.player?.name,
                         config.content.getString("url")
                 )
@@ -157,7 +157,7 @@ internal fun DiscordLink.getBot() = object : IBot {
                     val player = event.entity as Player
 
                     WebhookHandler.invokeForListener(
-                            defaultMessageContainer.getMessage("discord.death", player.name),
+                            messageContainer.getMessage("discord.death", player.name),
                             player.name,
                             config.content.getString("url")
                     )

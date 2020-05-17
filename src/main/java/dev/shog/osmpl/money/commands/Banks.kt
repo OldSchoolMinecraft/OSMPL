@@ -2,7 +2,6 @@ package dev.shog.osmpl.money.commands
 
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.msg.sendMessageHandler
-import dev.shog.osmpl.api.msg.sendMultiMessageHandler
 import dev.shog.osmpl.api.msg.sendMultiline
 import dev.shog.osmpl.fancyDate
 import dev.shog.osmpl.money.BankHandler

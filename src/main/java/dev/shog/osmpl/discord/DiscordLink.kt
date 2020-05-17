@@ -14,8 +14,8 @@ import org.bukkit.ChatColor
 /**
  * Main class
  */
-internal class DiscordLink(pl: OsmPlugin): OsmModule("discordlink", 1.0F, pl) {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/dl.json")
+internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
+    override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/dl.json")
 
     companion object {
         lateinit var client: GatewayDiscordClient
@@ -46,7 +46,7 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("discordlink", 1.0F, pl) {
             return@make when {
                 args.isEmpty() -> {
                     sender.sendMessage(
-                            defaultMessageContainer.getMessage(
+                            this@DiscordLink.messageContainer.getMessage(
                                     "commands.cursed.default", cursed.asSequence().joinToString(", ").removeSuffix(", ")
                             ))
 
@@ -59,10 +59,10 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("discordlink", 1.0F, pl) {
                             val word = args[1]
 
                             if (cursed.contains(word.toLowerCase())) {
-                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.already-exists"))
+                                sender.sendMessage(this@DiscordLink.messageContainer.getMessage("commands.cursed.already-exists"))
                             } else {
                                 CursedDataHandler.addCursed(word)
-                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.added", word))
+                                sender.sendMessage(this@DiscordLink.messageContainer.getMessage("commands.cursed.added", word))
                             }
 
                             true
@@ -72,10 +72,10 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("discordlink", 1.0F, pl) {
                             val word = args[1]
 
                             if (!cursed.contains(word.toLowerCase())) {
-                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.doesnt-exist"))
+                                sender.sendMessage(this@DiscordLink.messageContainer.getMessage("commands.cursed.doesnt-exist"))
                             } else {
                                 CursedDataHandler.removeCursed(word)
-                                sender.sendMessage(defaultMessageContainer.getMessage("commands.cursed.removed", word))
+                                sender.sendMessage(this@DiscordLink.messageContainer.getMessage("commands.cursed.removed", word))
                             }
 
                             true

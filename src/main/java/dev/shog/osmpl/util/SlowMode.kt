@@ -1,6 +1,5 @@
 package dev.shog.osmpl.util
 
-import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.OsmModule
 
 /**
@@ -15,9 +14,9 @@ internal class SlowMode(private val osm: OsmModule) {
             field = value
 
             if (value)
-                osm.pl.server.broadcastMessage(osm.defaultMessageContainer.getMessage("slowmode.announce.enabled", timing / 1000))
+                osm.pl.server.broadcastMessage(osm.messageContainer.getMessage("slowmode.announce.enabled", timing / 1000))
             else
-                osm.pl.server.broadcastMessage(osm.defaultMessageContainer.getMessage("slowmode.announce.disabled"))
+                osm.pl.server.broadcastMessage(osm.messageContainer.getMessage("slowmode.announce.disabled"))
         }
 
     /**
@@ -28,6 +27,6 @@ internal class SlowMode(private val osm: OsmModule) {
             field = value
 
             if (enabled)
-                osm.pl.server.broadcastMessage(osm.defaultMessageContainer.getMessage("slowmode.announce.timing", value / 1000))
+                osm.pl.server.broadcastMessage(osm.messageContainer.getMessage("slowmode.announce.timing", value / 1000))
         }
 }

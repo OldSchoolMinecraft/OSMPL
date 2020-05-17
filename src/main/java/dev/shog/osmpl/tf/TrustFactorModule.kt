@@ -8,7 +8,7 @@ import dev.shog.osmpl.tf.cmd.MANAGE_TRUST_FACTOR
 import dev.shog.osmpl.tf.cmd.VIEW_PROGRESS
 
 class TrustFactorModule(pl: OsmPlugin) : OsmModule("TrustFactor", 1.0F, pl) {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/tfm.json")
+    override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/tfm.json")
 
     override fun onEnable() {
         commands.addAll(setOf(VIEW_PROGRESS, MANAGE_TRUST_FACTOR))

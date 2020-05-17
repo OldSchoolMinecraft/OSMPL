@@ -9,7 +9,7 @@ import dev.shog.osmpl.money.commands.BANKS
 import dev.shog.osmpl.money.commands.SAVINGS_COMMAND
 
 class EconomyModule(pl: OsmPlugin) : OsmModule("Economy", 1.0F, pl) {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/econ.json")
+    override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/econ.json")
 
     override fun onEnable() {
         SqlHandler.initValues(pl) // TODO move to osmpl

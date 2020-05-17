@@ -9,13 +9,8 @@ import dev.shog.osmpl.api.msg.sendMessageHandler
  * The donate command.
  */
 internal val DONATE_COMMAND = Command.make("donate") {
-    OsmApi.isDonor(sender.name)
-            .handleAsync { es, _ ->
-                val link = es.either("donate.already-donated", "donate.not-donated")
+    val link = OsmApi.isDonor(sender.name).either("donate.already-donated", "donate.not-donated")
 
-                sendMessageHandler(link)
-            }
-            .get()
-
+    sendMessageHandler(link)
     true
 }

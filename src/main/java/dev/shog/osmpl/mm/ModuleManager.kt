@@ -7,7 +7,7 @@ import dev.shog.osmpl.api.msg.MessageContainer
 import dev.shog.osmpl.mm.commands.MODULE_COMMAND
 
 class ModuleManager(pl: OsmPlugin) : OsmModule("ModuleManager", 1.0F, pl) {
-    override val defaultMessageContainer: MessageContainer = MessageContainer.fromFile("messages/mm.json")
+    override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/mm.json")
 
     override fun onEnable() {
         commands.add(MODULE_COMMAND)

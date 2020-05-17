@@ -1,13 +1,10 @@
 package dev.shog.osmpl.discord.handle
 
 import dev.shog.osmpl.OsmPl
-import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.api.data.DataManager
-import kong.unirest.Config
 import kong.unirest.Unirest
 import me.moderator_man.fo.FakeOnline
 import org.bukkit.entity.Player
-import org.bukkit.util.config.Configuration
 import reactor.core.publisher.toMono
 
 /**
@@ -33,12 +30,12 @@ object WebhookHandler {
             return
 
         if (CursedDataHandler.isCursed(message.split(" "))) {
-            player.sendMessage(OsmPl.discordLink.defaultMessageContainer.getMessage("errors.everyone"))
+            player.sendMessage(OsmPl.discordLink.messageContainer.getMessage("errors.everyone"))
             return
         }
 
         invokeForListener(
-                OsmPl.discordLink.defaultMessageContainer.getMessage("discord.default", message),
+                OsmPl.discordLink.messageContainer.getMessage("discord.default", message),
                 player.name,
                 OsmPl.discordLink.config.content.getString("url")
         )

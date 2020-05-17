@@ -1,11 +1,8 @@
 package dev.shog.osmpl.tf
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import dev.shog.osmpl.tf.inf.TrustFactorHook
-import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
-import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockListener
 import org.bukkit.event.block.BlockPlaceEvent

@@ -114,7 +114,7 @@ commands:
         permission: osm.dl.cursed
     module:
         description: Manage Modules
-        usage: /module [enable/disable] {module name}
+        usage: /module [enable/disable/reload] {module name}
         permission-message: You do not have permission for this!
         permission: osm.mm
     savings:
@@ -123,6 +123,16 @@ commands:
     banks:
         description: Manage your bank membership.
         usage: /bank [join/transfer]
+    xp:
+        description: View your XP.
+    quests:
+        description: View your complete and uncomplete quests.
+    rankup:
+        description: Rank up.
+    rank:
+        description: View your rank.
+    osmq_debug:
+        description: Debug.
 permissions:
     osm.vtfp:
         description: Allow you to view trust factor progress.

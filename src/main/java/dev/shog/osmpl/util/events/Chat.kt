@@ -1,14 +1,9 @@
 package dev.shog.osmpl.util.events
 
 import dev.shog.osmpl.api.OsmModule
-import dev.shog.osmpl.api.data.DataManager
-import dev.shog.osmpl.api.msg.MessageContainer
-import dev.shog.osmpl.discord.handle.CursedDataHandler
 import dev.shog.osmpl.discord.handle.WebhookHandler
 import dev.shog.osmpl.util.UtilModule
-import me.moderator_man.fo.FakeOnline
 import org.bukkit.ChatColor
-import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerListener
@@ -58,7 +53,7 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
 
                 WebhookHandler.sendDiscordMessage(event.player, event.message)
 
-                event.message = osm.defaultMessageContainer
+                event.message = osm.messageContainer
                         .getMessage("chat.default", prefix, event.player.displayName, suffix, event.message)
             }
         }

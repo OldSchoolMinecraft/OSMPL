@@ -1,7 +1,6 @@
 package dev.shog.osmpl.api.data
 
 import dev.shog.osmpl.api.data.punishments.Punishment
-import java.io.File
 
 /**
  * User data skeleton. This information may be null or not filled in.
