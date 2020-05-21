@@ -7,6 +7,7 @@ import dev.shog.osmpl.discord.DiscordLink
 import dev.shog.osmpl.mm.ModuleManager
 import dev.shog.osmpl.money.EconomyModule
 import dev.shog.osmpl.api.RemoteRestart
+import dev.shog.osmpl.quests.Quests
 import dev.shog.osmpl.tf.TrustFactorModule
 import dev.shog.osmpl.util.UtilModule
 
@@ -49,7 +50,8 @@ class OsmPl : OsmPlugin() {
                     discordLink to true,
                     EconomyModule(this) to true,
                     ModuleManager(this) to true,
-                    TrustFactorModule(this) to true
+                    TrustFactorModule(this) to true,
+                    Quests(this) to true
             )
 
     override val requiredConfig: Collection<String> = setOf("username", "password", "url")

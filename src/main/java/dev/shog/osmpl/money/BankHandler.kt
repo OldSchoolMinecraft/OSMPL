@@ -1,10 +1,12 @@
 package dev.shog.osmpl.money
 
 import dev.shog.osmpl.api.SqlHandler
+import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.money.user.BankUser
 import org.json.JSONObject
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.timerTask
 import kotlin.math.roundToLong
 
@@ -51,14 +53,30 @@ object BankHandler {
                     .executeQuery()
 
             while (rs.next()) {
-                var newSavings = rs.getDouble("savings") * bank.savingsInterest
-                newSavings = (newSavings * 100.0).roundToLong() / 100.0
+                if (canGetSavings(rs.getString("name"))) {
+                    var newSavings = rs.getDouble("savings") * bank.savingsInterest
+                    newSavings = (newSavings * 100.0).roundToLong() / 100.0
 
-                BankUser.getUser(rs.getString("username")).savings = newSavings + rs.getDouble("savings")
+                    BankUser.getUser(rs.getString("username")).savings = newSavings + rs.getDouble("savings")
+                }
             }
 
             scheduleInterest(bank) // reschedule
         }, bank.savingsInterval)
+    }
+
+    /**
+     * A week in millis
+     */
+    private val week = TimeUnit.DAYS.toMillis(7)
+
+    /**
+     * If [name] can receive their savings.
+     */
+    private fun canGetSavings(name: String): Boolean {
+        val dataUser = DataManager.getUserData(name)
+
+        return dataUser != null && week > System.currentTimeMillis() - dataUser.lastLogOut
     }
 
     /**
