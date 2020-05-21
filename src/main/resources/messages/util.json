@@ -1,5 +1,6 @@
 {
     "restart": "§cA restart will be commencing in 1 minute.",
+    "playerDeath": "§8{0}§7 {1}",
     "trustfactor": {
         "view": "§8{0}§7's trust factor is currently §8{1}§7.",
         "modify": "§8{0}§7's trust factor is now §8{1}§7."

@@ -32,7 +32,7 @@ internal val ENTITY_DEATH = { osm: OsmModule ->
                             is Zombie -> "was munched on by a Zombie."
                             is Skeleton -> "was gunned down by a Skeleton."
                             is Player -> {
-                                val enemy = player.lastDamageCause.entity as Player
+                                val enemy = lastDamage.damager as Player
 
                                 "was brutally murdered by ${ChatColor.DARK_GRAY}${enemy.name}${ChatColor.GRAY}."
                             }
@@ -66,7 +66,7 @@ internal val ENTITY_DEATH = { osm: OsmModule ->
                 }
 
                 val message = osm.config.content.getString("playerDeath")
-                        .replace("{0}", player.displayName)
+                        .replace("{0}", player.name)
                         .replace("{1}", reason)
 
                 osm.pl.server.broadcastMessage(message)
