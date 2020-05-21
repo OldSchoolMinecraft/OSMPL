@@ -14,18 +14,7 @@ object DataManager {
     /**
      * Users
      */
-    val data: MutableList<User>
-
-    private val LOCATION by lazy {
-        val folder = File("playerdata")
-
-        if (!folder.exists())
-            folder.mkdirs()
-
-        folder
-    }
-
-    init {
+    val data: MutableList<User> by lazy {
         val users = LOCATION.listFiles()
 
         if (users != null) {
@@ -42,11 +31,20 @@ object DataManager {
                 }
             }
 
-            data = dataUsers.asSequence().map { it.getUser() }.toMutableList()
+            dataUsers.asSequence().map { it.getUser() }.toMutableList()
         } else {
             System.err.println("There was an issue loading player data!")
-            data = mutableListOf()
+            mutableListOf()
         }
+    }
+
+    private val LOCATION by lazy {
+        val folder = File("playerdata")
+
+        if (!folder.exists())
+            folder.mkdirs()
+
+        folder
     }
 
     /**
@@ -56,8 +54,9 @@ object DataManager {
         val mapper = ObjectMapper()
 
         synchronized(data) {
-            data.asSequence()
-                    .forEach { saveUser(it, mapper) }
+            for (user in data) {
+                saveUser(user, mapper)
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import org.bukkit.ChatColor
  * Main class
  */
 internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
+    override val config: Configuration = Configuration(this)
     override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/dl.json")
 
     companion object {
@@ -22,10 +23,12 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
     }
 
     override fun onEnable() {
-        if (!config.has("token", "channel", "url")) {
-            config.content.put("token", "Paste Discord bot token here :)")
-            config.content.put("channel", "Paste #minecraft-chat channel ID here :)")
-            config.content.put("url", "Paste the #minecraft-chat webhook here :)")
+        if (config.anyBlank()) {
+            if (!config.has("token", "channel", "url")) {
+                config.content.put("token", "")
+                config.content.put("channel", "")
+                config.content.put("url", "")
+            }
 
             System.err.println("[OSMPL:DL] The config is not properly filled out!")
 
@@ -102,6 +105,4 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
     override fun onRefresh() {
         config.refreshContent()
     }
-
-    override val config: Configuration = Configuration(this)
 }

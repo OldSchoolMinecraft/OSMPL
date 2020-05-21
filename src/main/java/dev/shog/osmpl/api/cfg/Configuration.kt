@@ -17,9 +17,18 @@ class Configuration(val osmModule: OsmModule) {
     }
 
     /**
+     * If any values are blank.
+     */
+    fun anyBlank() =
+            content.keys()
+                    .asSequence()
+                    .map { key -> content[key] }
+                    .any { value -> value.toString().isBlank() }
+
+    /**
      * The config file. Should be near osmpl/module_name.json
      */
-    private val configFile = File("${FOLDER.path}${File.separator}${osmModule.name}.json")
+    private val configFile = File("${FOLDER.path}${File.separator}${osmModule.name.toLowerCase()}.json")
 
     /**
      * The config file's content
