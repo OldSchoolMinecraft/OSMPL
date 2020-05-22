@@ -23,12 +23,24 @@ object BankHandler {
      */
     fun refreshBanks() {
         banks = getUpdatedBanks()
+
+        cancelTimer()
+
+        scheduleInterestAll()
+    }
+
+    /**
+     * Cancel [interestTimer]
+     */
+    fun cancelTimer() {
+        interestTimer.cancel()
+        interestTimer = Timer()
     }
 
     /**
      * The timer used for scheduling [Bank]'s interest receive times.
      */
-    private val interestTimer = Timer()
+    private var interestTimer = Timer()
 
     /**
      * Schedule interest timers for all [Bank]s using [scheduleInterest].

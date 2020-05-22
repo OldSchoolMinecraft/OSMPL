@@ -17,6 +17,7 @@ class EconomyModule(pl: OsmPlugin) : OsmModule("Economy", 1.0F, pl) {
         commands.addAll(setOf(SAVINGS_COMMAND, BANKS))
 
         BankHandler.scheduleInterestAll()
+        BankHandler.cancelTimer()
     }
 
     override fun onDisable() {

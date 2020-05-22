@@ -36,6 +36,12 @@ fun Double.parsePercent(): String {
 }
 
 /**
+ * Parse a [Float] into a [String] percent;
+ */
+fun Float.parsePercent(): String =
+        String.format("%.1f",this*100)+"%"
+
+/**
  * Format [str] with [args]
  */
 internal fun formatTextArray(str: String, args: Collection<String?>): String {
@@ -85,8 +91,8 @@ fun Long.fancyDate(): String {
     val hoursMinutes = minutes - hours * 60
 
     if (hours < 24) {
-        response += if (hours > 1) "$hours hours " else "$hours hour "
-        response += if (hoursMinutes > 1) "$hoursMinutes minutes" else "$hoursMinutes minute"
+        response += if (hours == 1L) "$hours hour " else "$hours hours "
+        response += if (hoursMinutes == 1L) "$hoursMinutes minute" else "$hoursMinutes minutes"
 
         return response
     }
@@ -95,8 +101,8 @@ fun Long.fancyDate(): String {
     val hoursDays = hours - days * 24
 
     if (days < 7) {
-        response += if (days > 1) "$days days " else "$days day "
-        response += if (hoursDays > 1) "$hoursDays hours" else "$hoursDays hour"
+        response += if (days == 1L) "$days day " else "$days days "
+        response += if (hoursDays == 1L) "$hoursDays hour" else "$hoursDays hours"
 
         return response
     }
@@ -104,8 +110,8 @@ fun Long.fancyDate(): String {
     val weeks = days / 7
     val weekDays = days - weeks * 7
 
-    response += if (weeks > 1) "$weeks weeks " else "$weeks week "
-    response += if (weekDays > 1) "$weekDays days" else "$weekDays day"
+    response += if (weeks == 1L) "$weeks week " else "$weeks weeks "
+    response += if (weekDays == 1L) "$weekDays day" else "$weekDays days"
 
     return response
 }

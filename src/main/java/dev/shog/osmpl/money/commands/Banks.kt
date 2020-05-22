@@ -6,6 +6,7 @@ import dev.shog.osmpl.api.msg.sendMultiline
 import dev.shog.osmpl.fancyDate
 import dev.shog.osmpl.money.BankHandler
 import dev.shog.osmpl.money.user.BankUser
+import dev.shog.osmpl.parsePercent
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 
@@ -50,7 +51,7 @@ val BANKS = Command.make("banks") {
             sendMessageHandler(
                     "banks.about",
                     bankData.name,
-                    decimalFormat.format(bankData.savingsInterest),
+                    bankData.savingsInterest.parsePercent(),
                     bankData.savingsInterval.fancyDate()
             )
         }
