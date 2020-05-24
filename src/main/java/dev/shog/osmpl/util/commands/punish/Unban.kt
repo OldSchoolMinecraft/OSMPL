@@ -3,6 +3,7 @@ package dev.shog.osmpl.util.commands.punish
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.api.msg.broadcastPermission
+import dev.shog.osmpl.unPunishmentWebhook
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -22,6 +23,8 @@ internal val UN_BAN_COMMAND = Command.make("unban") {
             val senderName = if (sender is Player) sender.name else "Console"
 
             if (user.currentBan != null) {
+                unPunishmentWebhook(user.name, user.currentBan!!)
+
                 user.currentBan = null
 
                 broadcastPermission(

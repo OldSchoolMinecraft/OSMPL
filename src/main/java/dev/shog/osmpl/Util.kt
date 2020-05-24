@@ -1,5 +1,6 @@
 package dev.shog.osmpl
 
+import dev.shog.osmpl.api.data.punishments.Punishment
 import kong.unirest.Unirest
 import org.bukkit.entity.Player
 import org.bukkit.util.config.Configuration
@@ -143,4 +144,13 @@ internal fun sendWebhookMessage(message: String, username: String): CompletableF
             .body(obj.toString())
             .asEmptyAsync()
             .handleAsync { result, _ -> result.isSuccess }
+}
+
+/**
+ * Send a webhook message when a punishment has been manually removed.
+ */
+internal fun unPunishmentWebhook(user: String, punishment: Punishment) {
+    sendWebhookMessage("Username: `${user}`, " +
+            "Punishment: `${punishment.type}`, " +
+            "Reason: `${punishment.reason}`", "Expired Punishments")
 }
