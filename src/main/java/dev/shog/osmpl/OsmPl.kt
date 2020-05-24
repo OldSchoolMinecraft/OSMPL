@@ -33,6 +33,14 @@ class OsmPl : OsmPlugin() {
         discordLink = DiscordLink(this)
 
         initRemoteRestart()
+
+        configuration.load()
+
+        configuration.getStringList("disabled", listOf())?.forEach { disable ->
+            modules
+                    .filter { module -> module.key.name.equals(disable, true) }
+                    .forEach { disableModule(it.key) }
+        }
     }
 
     /**
@@ -52,5 +60,5 @@ class OsmPl : OsmPlugin() {
                     TrustFactorModule(this) to true
             )
 
-    override val requiredConfig: Collection<String> = setOf("username", "password", "url")
+    override val requiredConfig: Collection<String> = setOf("username", "password", "url", "disabled")
 }
