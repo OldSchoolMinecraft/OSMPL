@@ -48,7 +48,6 @@ object WebhookHandler {
             .body(getJsonObject(username, image, message))
             .asStringAsync()
             .toMono()
-            .doOnNext { println(it.isSuccess);println(it.body) }
 
     private fun getJsonObject(username: String, image: String, content: String): String =
         "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"
