@@ -64,15 +64,11 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
             pl.disableModule(this)
         }
 
-        if (!config.has("discordLink", "playerDeath", "discordMessage", "sleepComplete", "sleepPart", "enableSlowModeAt", "slowModeInSec", "rafflePrice", "slowModeDisableUnderThreshold", "ipHubKey", "webhook", "username", "password", "url")) {
+        if (!config.has("discordLink", "discordMessage", "enableSlowModeAt", "slowModeInSec", "rafflePrice", "slowModeDisableUnderThreshold", "ipHubKey", "webhook")) {
             System.err.println("[OSMPL:Util] Please fill out the configuration file!")
 
             config.content.put("discordLink", "https://discord.gg/ccCN5uH")
-            config.content.put("playerDeath", "§e{0}§6 {1}")
             config.content.put("discordMessage", "§e{0}")
-
-            config.content.put("sleepComplete", "§6{0}/{1} §eplayers are in bed, time is now turning to day!")
-            config.content.put("sleepPart", "§6{0} §eis in bed. §6{1} §emore are required to turn it to day.")
 
             config.content.put("ipHubKey", "Paste the IP Hub key here :)")
 
@@ -84,19 +80,11 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
 
             config.content.put("webhook", "Paste the webhook here :)")
 
-            config.content.put("username", "Paste SQL username here :)")
-            config.content.put("password", "Paste SQL password here :)")
-            config.content.put("url", "Paste SQL url here :)")
-
             config.save()
             pl.disableModule(this)
 
             return
         }
-
-        SqlHandler.url = config.content.getString("url")
-        SqlHandler.username = config.content.getString("username")
-        SqlHandler.password = config.content.getString("password")
 
         ipChecker = IpChecker(config.content.getString("ipHubKey"))
         webHook = config.content.getString("webhook")

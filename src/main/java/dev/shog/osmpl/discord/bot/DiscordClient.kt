@@ -133,35 +133,13 @@ internal fun DiscordLink.getBot() = object : IBot {
     init {
         pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
             override fun onPlayerJoin(event: PlayerJoinEvent?) {
-                WebhookHandler.invokeForListener(
-                        messageContainer.getMessage("discord.join", event?.player?.name),
-                        event?.player?.name,
-                        config.content.getString("url")
-                )
+                WebhookHandler.invoke(messageContainer.getMessage("discord.join", event?.player?.name), "OSM Server")
             }
         }, Event.Priority.Normal, pl)
 
         pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
             override fun onPlayerQuit(event: PlayerQuitEvent?) {
-                WebhookHandler.invokeForListener(
-                        messageContainer.getMessage("discord.leave", event?.player?.name),
-                        event?.player?.name,
-                        config.content.getString("url")
-                )
-            }
-        }, Event.Priority.Normal, pl)
-
-        pl.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object : EntityListener() {
-            override fun onEntityDeath(event: EntityDeathEvent?) {
-                if (event?.entity is Player) {
-                    val player = event.entity as Player
-
-                    WebhookHandler.invokeForListener(
-                            messageContainer.getMessage("discord.death", player.name),
-                            player.name,
-                            config.content.getString("url")
-                    )
-                }
+                WebhookHandler.invoke(messageContainer.getMessage("discord.leave", event?.player?.name), "OSM Server")
             }
         }, Event.Priority.Normal, pl)
     }

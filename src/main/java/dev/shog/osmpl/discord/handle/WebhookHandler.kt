@@ -14,12 +14,10 @@ object WebhookHandler {
     /**
      * Invoke for a listener.
      */
-    fun invokeForListener(message: String, name: String?, hook: String) {
-        if (name != null) {
-                ImageHandler.getUserImage(name)
-                    .flatMap { image -> sendMessage(message, name, image, hook) }
-                    .subscribe()
-        }
+    fun invoke(message: String, name: String) {
+        ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
+                .flatMap { image -> sendMessage(message, name, image, OsmPl.discordLink.config.content.getString("url")) }
+                .subscribe()
     }
 
     /**
@@ -34,11 +32,7 @@ object WebhookHandler {
             return
         }
 
-        invokeForListener(
-                OsmPl.discordLink.messageContainer.getMessage("discord.default", message),
-                player.name,
-                OsmPl.discordLink.config.content.getString("url")
-        )
+        invoke(OsmPl.discordLink.messageContainer.getMessage("discord.default", message), player.name)
     }
 
     /**
@@ -52,8 +46,9 @@ object WebhookHandler {
     ) = Unirest.post(hook)
             .header("Content-Type", "application/json")
             .body(getJsonObject(username, image, message))
-            .asEmptyAsync()
+            .asStringAsync()
             .toMono()
+            .doOnNext { println(it.isSuccess);println(it.body) }
 
     private fun getJsonObject(username: String, image: String, content: String): String =
         "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"

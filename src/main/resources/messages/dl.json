@@ -2,7 +2,7 @@
     "discord": {
         "join": "__{0}__ has joined.",
         "leave": "__{0}__ has left.",
-        "death": "__{0}__ has died.",
+        "death": "__{0}__ {1}",
         "default": "{0}"
     },
     "minecraft": {

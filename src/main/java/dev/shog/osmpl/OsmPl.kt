@@ -9,6 +9,7 @@ import dev.shog.osmpl.money.EconomyModule
 import dev.shog.osmpl.api.RemoteRestart
 import dev.shog.osmpl.tf.TrustFactorModule
 import dev.shog.osmpl.util.UtilModule
+import reactor.core.publisher.Hooks
 
 
 /**
@@ -33,13 +34,20 @@ class OsmPl : OsmPlugin() {
         discordLink = DiscordLink(this)
 
         initRemoteRestart()
+    }
 
-        configuration.load()
+    override fun onEnable() {
+        super.onEnable()
 
-        configuration.getStringList("disabled", listOf())?.forEach { disable ->
-            modules
-                    .filter { module -> module.key.name.equals(disable, true) }
-                    .forEach { disableModule(it.key) }
+        Hooks.onOperatorDebug()
+
+        try {
+            configuration.getStringList("disabled", listOf())?.forEach { disable ->
+                modules
+                        .filter { module -> module.key.name.equals(disable, true) }
+                        .forEach { disableModule(it.key) }
+            }
+        } catch (ex: Exception) {
         }
     }
 

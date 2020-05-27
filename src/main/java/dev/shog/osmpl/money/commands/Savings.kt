@@ -18,53 +18,46 @@ val SAVINGS_COMMAND = Command.make("savings") {
         user.bank == -1 ->
             sendMessageHandler("savings.no-bank")
 
-        args.size == 2 && args[0] == "deposit" -> {
+        args.size == 2 && (args[0].toLowerCase() == "deposit" || args[0].toLowerCase() == "withdraw") -> {
             val amount = args[1]
+            val deposit = args[0].toLowerCase() == "deposit"
 
             if (amount.length >= 2 && amount[0] == '$') {
                 val doubleAmount = amount.removePrefix("$").toDoubleOrNull()
 
-                if (doubleAmount != null) {
-                    val econ = Economy.hasEnough(sender.name, doubleAmount)
+                when {
+                    doubleAmount == null ->
+                        sendMessageHandler("savings.invalid-number")
 
-                    if (econ) {
+                    0 >= doubleAmount ->
+                        sendMessageHandler("savings.invalid-number")
+
+                    deposit && !Economy.hasEnough(sender.name, doubleAmount) ->
+                        sendMessageHandler("savings.not-enough-deposit")
+
+                    !deposit && doubleAmount >= user.savings ->
+                        sendMessageHandler("savings.not-enough-withdraw")
+
+                    deposit -> {
                         sendMessageHandler("savings.deposit", doubleAmount)
                         Economy.subtract(sender.name, doubleAmount)
 
                         user.savings += doubleAmount
                         return@make true
-                    } else {
-                        sendMessageHandler("savings.not-enough-deposit")
-                        return@make true
                     }
-                }
-            }
 
-            sendMessageHandler("savings.invalid-number")
-            return@make true
-        }
-
-        args.size == 2 && args[0] == "withdraw" -> {
-            val amount = args[1]
-
-            if (amount.length >= 2 && amount[0] == '$') {
-                val doubleAmount = amount.removePrefix("$").toDoubleOrNull()
-
-                if (doubleAmount != null) {
-                    if (user.savings >= doubleAmount) {
-                        sendMessageHandler("savings.withdraw")
+                    !deposit -> {
                         Economy.add(sender.name, doubleAmount)
 
                         user.savings -= doubleAmount
-                        return@make true
-                    } else {
-                        sendMessageHandler("savings.not-enough-withdraw")
-                        return@make true
+
+                        sendMessageHandler("savings.withdraw", doubleAmount)
                     }
+
+                    else -> return@make false
                 }
             }
 
-            sendMessageHandler("savings.invalid-number")
             return@make true
         }
 

@@ -1,6 +1,8 @@
 package dev.shog.osmpl.util.events
 
+import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.OsmModule
+import dev.shog.osmpl.discord.handle.WebhookHandler
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.entity.Skeleton
@@ -65,9 +67,9 @@ internal val ENTITY_DEATH = { osm: OsmModule ->
                     else -> "died."
                 }
 
-                val message = osm.config.content.getString("playerDeath")
-                        .replace("{0}", player.name)
-                        .replace("{1}", reason)
+                val message = osm.messageContainer.getMessage("playerDeath", player.name, reason)
+
+                WebhookHandler.invoke(OsmPl.discordLink.messageContainer.getMessage("discord.death", player.name, ChatColor.stripColor(reason)), "OSM Server")
 
                 osm.pl.server.broadcastMessage(message)
             }
