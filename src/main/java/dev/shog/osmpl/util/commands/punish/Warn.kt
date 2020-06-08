@@ -29,7 +29,7 @@ internal val WARN_COMMAND = Command.make("warn") {
                 rArgs.stream()
                         .collect(Collectors.joining(" "))
                         .trim()
-            } else "You have been muted!"
+            } else "You have been warned!"
 
             val avoid = osmModule.pl.server.onlinePlayers
                     .filter { p -> p.name.equals(user.name, true) }
