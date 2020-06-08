@@ -7,6 +7,7 @@ import dev.shog.osmpl.discord.DiscordLink
 import dev.shog.osmpl.mm.ModuleManager
 import dev.shog.osmpl.money.EconomyModule
 import dev.shog.osmpl.api.RemoteRestart
+import dev.shog.osmpl.api.SqlHandler
 import dev.shog.osmpl.tf.TrustFactorModule
 import dev.shog.osmpl.util.UtilModule
 import reactor.core.publisher.Hooks
@@ -38,6 +39,8 @@ class OsmPl : OsmPlugin() {
 
     override fun onEnable() {
         super.onEnable()
+
+        SqlHandler.initValues(this)
 
         Hooks.onOperatorDebug()
 

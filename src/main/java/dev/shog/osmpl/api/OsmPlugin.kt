@@ -19,20 +19,24 @@ abstract class OsmPlugin : JavaPlugin() {
         configuration.load()
 
         if (!configuration.keys.containsAll(requiredConfig)) {
-            System.err.println("[OSMPL] Disabling plugin due to missfilled config. Requires: $requiredConfig")
+            System.err.println("[OSMPL] Disabling plugin due to miss-filled config. Requires: $requiredConfig")
 
             pluginLoader.disablePlugin(this)
             return
         }
 
         getEnabledModules().forEach { m ->
-            server.scheduler.scheduleAsyncDelayedTask(this) { enableModule(m) }
+            server.scheduler.scheduleAsyncDelayedTask(this) {
+                enableModule(m)
+            }
         }
     }
 
     override fun onDisable() {
         getEnabledModules().forEach { m ->
-            server.scheduler.scheduleAsyncDelayedTask(this) { disableModule(m) }
+            server.scheduler.scheduleAsyncDelayedTask(this) {
+                disableModule(m)
+            }
         }
     }
 
@@ -40,28 +44,43 @@ abstract class OsmPlugin : JavaPlugin() {
      * Refresh a module
      */
     fun refreshModule(module: OsmModule) {
-        module.onRefresh()
+        try {
+            module.onRefresh()
+        } catch (ex: Exception) {
+            System.err.println("[OSMPL] There was an issue disabling ${module.name}")
+            modules[module] = false
+        }
     }
 
     /**
      * Disable a module.
      */
     fun disableModule(module: OsmModule) {
-        module.onDisable()
-        unRegisterCommands(module)
+        try {
+            module.onDisable()
+            unRegisterCommands(module)
 
-        modules[module] = false
+            modules[module] = false
+        } catch (ex: Exception) {
+            System.err.println("[OSMPL] There was an issue disabling ${module.name}")
+            modules[module] = false
+        }
     }
 
     /**
      * Enable a module.
      */
     fun enableModule(module: OsmModule) {
-        module.onEnable()
-        registerCommands(module)
+        try {
+            module.onEnable()
+            registerCommands(module)
 
-        if (modules[module] == false)
-            modules[module] = true
+            if (modules[module] == false)
+                modules[module] = true
+        } catch (ex: Exception) {
+            System.err.println("[OSMPL] There was an issue enabling ${module.name}")
+            modules[module] = false
+        }
     }
 
     /**
@@ -76,7 +95,11 @@ abstract class OsmPlugin : JavaPlugin() {
     fun refreshModules() {
         getEnabledModules().forEach {
             server.scheduler.scheduleAsyncDelayedTask(this) {
-                it.onRefresh()
+                try {
+                    it.onRefresh()
+                } catch (ex: Exception) {
+                    System.err.println("[OSMPL] There was an issue refreshing ${it.name}!")
+                }
             }
         }
     }

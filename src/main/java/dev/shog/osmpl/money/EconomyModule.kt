@@ -12,8 +12,6 @@ class EconomyModule(pl: OsmPlugin) : OsmModule("Economy", 1.0F, pl) {
     override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/econ.json")
 
     override fun onEnable() {
-        SqlHandler.initValues(pl) // TODO move to osmpl
-
         commands.addAll(setOf(SAVINGS_COMMAND, BANKS))
 
         BankHandler.scheduleInterestAll()
