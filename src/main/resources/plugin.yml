@@ -133,7 +133,23 @@ commands:
         description: View your rank.
     osmq_debug:
         description: Debug.
+    viewpunish:
+        description: View a user's punishments
+        usage: /viewpunish [user] {filter/index}
+        permission-message: You do not have permission for this!
+        permission: osm.viewpunish
+    warn:
+        description: Warn a user
+        usage: /warn [user]
+        permission-message: You do not have permission for this!
+        permission: osm.warn
 permissions:
+    osm.warn:
+        description: Warn a user
+        default: op
+    osm.viewpunish:
+        description: View a user's punishments
+        default: op
     osm.vtfp:
         description: Allow you to view trust factor progress.
         default: op

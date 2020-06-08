@@ -18,15 +18,17 @@ import dev.shog.osmpl.util.commands.SEEN_COMMAND
 import dev.shog.osmpl.util.commands.SLEEPING_COMMAND
 import dev.shog.osmpl.util.commands.SLOWMODE_COMMAND
 import dev.shog.osmpl.util.commands.STAFF_COMMAND
+import dev.shog.osmpl.util.commands.raffle.RAFFLE_COMMAND
+import dev.shog.osmpl.api.SqlHandler
+import dev.shog.osmpl.tf.TrustFactorHookHandler
+import dev.shog.osmpl.util.commands.punish.*
 import dev.shog.osmpl.util.commands.punish.BAN_COMMAND
 import dev.shog.osmpl.util.commands.punish.MUTE_COMMAND
 import dev.shog.osmpl.util.commands.punish.TEMP_BAN_COMMAND
 import dev.shog.osmpl.util.commands.punish.TEMP_MUTE_COMMAND
 import dev.shog.osmpl.util.commands.punish.UN_BAN_COMMAND
 import dev.shog.osmpl.util.commands.punish.UN_MUTE_COMMAND
-import dev.shog.osmpl.util.commands.raffle.RAFFLE_COMMAND
-import dev.shog.osmpl.api.SqlHandler
-import dev.shog.osmpl.tf.TrustFactorHookHandler
+import dev.shog.osmpl.util.commands.punish.VIEW_PUNISHMENTS
 import dev.shog.osmpl.util.events.*
 import dev.shog.osmpl.util.events.ENTITY_DEATH
 import dev.shog.osmpl.util.events.PLAYER_CHAT
@@ -42,7 +44,7 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
 
     init {
         commands.addAll(setOf(
-                DISCORD, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP
+                DISCORD, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, VIEW_PUNISHMENTS, WARN_COMMAND
         ))
     }
 

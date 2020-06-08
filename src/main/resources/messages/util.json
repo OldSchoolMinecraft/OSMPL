@@ -145,6 +145,19 @@
             "unentered": "§7There is currently a raffle going on for §8{0}§7. This raffle ends in §8{1}§7 minutes. You have not entered."
         }
     },
+    "cake": {
+        "no-break": "§cYou aren't allowed to ruin the party!"
+    },
+    "view-punishments": {
+        "invalid-user": "§cThat user could not be found.",
+        "invalid-filter": "§cThat punishment type could not be found.",
+        "invalid-index": "§cThat index is invalid!",
+        "viewer": {
+            "header": "§8{0}:{1}",
+            "entry": "§7\n- §8{0}§7: §8{1} §7(§8{2}§7)"
+        },
+        "view": "§8{0} §7on §8{1}\n§7- Reason: §8{2}\n§7- Expire: §8{3}\n§7- On: §8{4}"
+    },
     "admin": {
         "ip-ban": "§c{0}'s ip ({1}) has been previously banned, they have been banned.",
         "unable-check-vpn": "§c{0} was unable to be checked for a VPN.",
@@ -164,6 +177,9 @@
     },
     "mute": {
         "avoid": "§cYou can't mute this person!"
+    },
+    "warn": {
+        "avoid": "§cYou can't warn this person!"
     },
     "sleep": {
         "complete": "§8{0}/{1} §7players are in bed, time is now turning to day!",

@@ -126,6 +126,12 @@ object DefaultTrustFactorHandler: TrustFactorHandler {
                     removeTrust(user, (userTrust * 0.75).roundToInt())
                 else removeTrust(user, (userTrust * 0.25).roundToInt())
             }
+
+            PunishmentType.WARN -> {
+                val userTrust = viewTrust(user)
+
+                removeTrust(user, (userTrust * 0.05).roundToInt())
+            }
         }
     }
 }
