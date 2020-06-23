@@ -147,11 +147,14 @@ commands:
         description: Disable quests.
         usage: /disablequests
     rainbow:
-        description: Rainbow-ify your name
+        description: Rainbow-ify your name.
         usage: /rainbow
         permission-message: You do not have permission for this!
         permission: osm.rainbow
 permissions:
+    osm.rainbow:
+        description: Rainbow-ify your name.
+        default: op
     osm.warn:
         description: Warn a user
         default: op
