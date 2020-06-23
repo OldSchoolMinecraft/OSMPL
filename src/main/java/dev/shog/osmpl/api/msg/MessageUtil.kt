@@ -4,6 +4,14 @@ import dev.shog.osmpl.api.cmd.CommandContext
 import dev.shog.osmpl.hasPermissionOrOp
 import me.moderator_man.fo.FakeOnline
 import org.bukkit.Server
+import org.bukkit.entity.Player
+
+/**
+ * Send a message from a message container.
+ */
+fun Player.sendMessageHandler(container: MessageContainer, message: String, vararg args: Any?) {
+    sendMessage(container.getMessage(message, args.toList()))
+}
 
 /**
  * Send a multiline [message]. Define a new line with '\n'

@@ -5,6 +5,10 @@ import dev.shog.osmpl.api.OsmPlugin
 import dev.shog.osmpl.api.cfg.Configuration
 import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.api.msg.MessageContainer
+import dev.shog.osmpl.util.commands.raffle.RAFFLE_COMMAND
+import dev.shog.osmpl.api.SqlHandler
+import dev.shog.osmpl.tf.TrustFactorHookHandler
+import dev.shog.osmpl.util.commands.*
 import dev.shog.osmpl.util.commands.BAL_TOP
 import dev.shog.osmpl.util.commands.DISCORD
 import dev.shog.osmpl.util.commands.DONATE_COMMAND
@@ -14,13 +18,11 @@ import dev.shog.osmpl.util.commands.LIST_COMMAND
 import dev.shog.osmpl.util.commands.OSM_COMMAND
 import dev.shog.osmpl.util.commands.PLAYER_MANAGER
 import dev.shog.osmpl.util.commands.PLAY_TIME_TOP
+import dev.shog.osmpl.util.commands.RAINBOW
 import dev.shog.osmpl.util.commands.SEEN_COMMAND
 import dev.shog.osmpl.util.commands.SLEEPING_COMMAND
 import dev.shog.osmpl.util.commands.SLOWMODE_COMMAND
 import dev.shog.osmpl.util.commands.STAFF_COMMAND
-import dev.shog.osmpl.util.commands.raffle.RAFFLE_COMMAND
-import dev.shog.osmpl.api.SqlHandler
-import dev.shog.osmpl.tf.TrustFactorHookHandler
 import dev.shog.osmpl.util.commands.punish.*
 import dev.shog.osmpl.util.commands.punish.BAN_COMMAND
 import dev.shog.osmpl.util.commands.punish.MUTE_COMMAND
@@ -44,7 +46,7 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
 
     init {
         commands.addAll(setOf(
-                DISCORD, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, VIEW_PUNISHMENTS, WARN_COMMAND
+                DISCORD, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, VIEW_PUNISHMENTS, WARN_COMMAND, RAINBOW, DISABLE_QUESTS
         ))
     }
 

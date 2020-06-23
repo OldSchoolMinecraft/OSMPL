@@ -21,13 +21,4 @@ internal val BLOCK_PLACE = { osm: OsmModule ->
             }
         }
     }, Event.Priority.Normal, osm.pl)
-
-    osm.pl.server.pluginManager.registerEvent(Event.Type.BLOCK_BREAK, object : BlockListener() {
-        override fun onBlockBreak(event: BlockBreakEvent?) {
-            if (event != null && event.block.type == Material.CAKE_BLOCK && !event.player.hasPermissionOrOp("osm.bypasscake")) {
-                event.isCancelled = true
-                event.player.sendMessage(osm.messageContainer.getMessage("cake.no-break"))
-            }
-        }
-    }, Event.Priority.Normal, osm.pl)
 }

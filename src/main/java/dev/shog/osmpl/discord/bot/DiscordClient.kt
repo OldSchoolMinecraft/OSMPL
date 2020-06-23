@@ -5,6 +5,7 @@ import dev.shog.osmpl.discord.handle.WebhookHandler
 import discord4j.core.DiscordClient
 import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.message.MessageCreateEvent
+import org.bukkit.ChatColor
 import org.bukkit.Server
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -121,7 +122,7 @@ internal fun DiscordLink.getBot() = object : IBot {
                                                 messageContainer.getMessage("minecraft.default",
                                                         e.member.get().username,
                                                         e.member.get().discriminator,
-                                                        content
+                                                        ChatColor.stripColor(content)
                                                 )
                                         )
                                     }

@@ -3,6 +3,8 @@ package dev.shog.osmpl.util.events
 import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.discord.handle.WebhookHandler
 import dev.shog.osmpl.util.UtilModule
+import dev.shog.osmpl.util.commands.applyRainbow
+import dev.shog.osmpl.util.commands.colorful
 import org.bukkit.ChatColor
 import org.bukkit.event.Event
 import org.bukkit.event.player.PlayerChatEvent
@@ -51,10 +53,19 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
                     event.message = event.message.replace("&", "§")
                 else event.message = ChatColor.stripColor(event.message)
 
-                WebhookHandler.sendDiscordMessage(event.player, event.message)
+                WebhookHandler.sendDiscordMessage(event.player, ChatColor.stripColor(event.message))
 
-                event.message = osm.messageContainer
-                        .getMessage("chat.default", prefix, event.player.displayName, suffix, event.message)
+                val name = if (colorful.contains(event.player.name.toLowerCase()))
+                    applyRainbow(event.player.displayName)
+                else event.player.displayName
+
+                event.message = osm.messageContainer.getMessage(
+                        "chat.default",
+                        prefix,
+                        name,
+                        suffix,
+                        event.message
+                )
             }
         }
     }, Event.Priority.Normal, osm.pl)

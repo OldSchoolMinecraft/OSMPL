@@ -143,6 +143,14 @@ commands:
         usage: /warn [user]
         permission-message: You do not have permission for this!
         permission: osm.warn
+    disablequests:
+        description: Disable quests.
+        usage: /disablequests
+    rainbow:
+        description: Rainbow-ify your name
+        usage: /rainbow
+        permission-message: You do not have permission for this!
+        permission: osm.rainbow
 permissions:
     osm.warn:
         description: Warn a user
