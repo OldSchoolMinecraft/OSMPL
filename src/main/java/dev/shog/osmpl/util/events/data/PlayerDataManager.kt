@@ -8,6 +8,8 @@ import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.api.msg.broadcastMultiline
 import dev.shog.osmpl.api.msg.broadcastPermission
 import dev.shog.osmpl.util.UtilModule
+import me.moderator_man.fo.FOLoginEvent
+import me.moderator_man.fo.FakeOnline
 import org.bukkit.event.Event
 import org.bukkit.event.player.*
 
@@ -38,87 +40,90 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
     }, Event.Priority.Highest, osm.pl)
 
     // Manage IP checking and if a user is banned
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
-        override fun onPlayerJoin(event: PlayerJoinEvent?) {
-            if (event != null) {
-                val ip = try {
-                    event.player?.address?.hostString
-                } catch (e: Exception) {
-                    null
+    val ipBanChecker = FOLoginEvent { name ->
+        if (name != null) {
+            val player = osm.pl.server.onlinePlayers
+                    .single { player -> player.name.equals(name, true) }
+
+            val ip = try {
+                player?.address?.hostString
+            } catch (e: Exception) {
+                null
+            }
+
+            when {
+                ip == null -> {
+                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
+                    return@FOLoginEvent
                 }
 
-                when {
-                    ip == null -> {
-                        event.player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
-                        return
-                    }
+                DataManager.isIpBanned(ip) -> {
+                    osm.pl.server.broadcastPermission(osm.messageContainer.getMessage("admin.ip-ban", player.name, ip), "osm.notify.ips")
 
-                    DataManager.isIpBanned(ip) -> {
-                        osm.pl.server.broadcastPermission(osm.messageContainer.getMessage("admin.ip-ban", event.player.name, ip), "osm.notify.ips")
+                    DataManager.punishUser(
+                            player.name,
+                            "Console",
+                            Punishment(
+                                    System.currentTimeMillis(),
+                                    osm.messageContainer.getMessage("default-ban-messages.ip-ban-auto"),
+                                    PunishmentType.BAN,
+                                    -1
+                            )
+                    )
 
-                        DataManager.punishUser(
-                                event.player.name,
-                                "Console",
-                                Punishment(
-                                        System.currentTimeMillis(),
-                                        osm.messageContainer.getMessage("default-ban-messages.ip-ban-auto"),
-                                        PunishmentType.BAN,
-                                        -1
-                                )
-                        )
-
-                        event.player.kickPlayer(osm.messageContainer.getMessage("banned.ip-banned"))
-                        return
-                    }
+                    player.kickPlayer(osm.messageContainer.getMessage("banned.ip-banned"))
+                    return@FOLoginEvent
                 }
+            }
 
-                val checkedIp = try {
-                   UtilModule.ipChecker.checkIp(ip.orElse(""))
-                } catch (e: Exception) {
-                    osm.pl.server.broadcastPermission(
-                            osm.messageContainer.getMessage("admin.unable-check-vpn", event.player.name),
+            val checkedIp = try {
+                UtilModule.ipChecker.checkIp(ip.orElse(""))
+            } catch (e: Exception) {
+                osm.pl.server.broadcastPermission(
+                        osm.messageContainer.getMessage("admin.unable-check-vpn", player.name),
+                        "osm.notify.ips"
+                )
+
+                null
+            }
+
+            when {
+                checkedIp?.block == 2 ->
+                    osm.pl.server.broadcastMultiline(
+                            osm.messageContainer.getMessage("admin.possible-vpn", player.name, checkedIp.toString()),
                             "osm.notify.ips"
                     )
 
-                    null
+                checkedIp?.block == 1 -> {
+                    osm.pl.server.broadcastMultiline(
+                            osm.messageContainer.getMessage("admin.vpn", player.name, checkedIp.toString()),
+                            "osm.notify.ips"
+                    )
+
+                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
+                    return@FOLoginEvent
                 }
 
-                when {
-                    checkedIp?.block == 2 ->
-                        osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.possible-vpn", event.player.name, checkedIp.toString()),
-                                "osm.notify.ips"
-                        )
+                else ->
+                    osm.pl.server.broadcastPermission(
+                            osm.messageContainer.getMessage("admin.ip-info", player.name, checkedIp.toString()),
+                            "osm.ipinfo"
+                    )
+            }
 
-                    checkedIp?.block == 1 -> {
-                        osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.vpn", event.player.name, checkedIp.toString()),
-                                "osm.notify.ips"
-                        )
+            if (!DataManager.userExists(player.name.toLowerCase())) {
+                try {
+                    DataManager.registerUser(player)
+                } catch (ex: Exception) { // This happens if the IP could not be resolved.
+                    val message = osm.messageContainer.getMessage("player-join.ip-not-resolved")
 
-                        event.player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
-                        return
-                    }
-
-                    else ->
-                        osm.pl.server.broadcastPermission(
-                                osm.messageContainer.getMessage("admin.ip-info", event.player.name, checkedIp.toString()),
-                                "osm.ipinfo"
-                        )
-                }
-
-                if (!DataManager.userExists(event.player.name.toLowerCase())) {
-                    try {
-                        DataManager.registerUser(event.player)
-                    } catch (ex: Exception) { // This happens if the IP could not be resolved.
-                        val message = osm.messageContainer.getMessage("player-join.ip-not-resolved")
-
-                        event.player.kickPlayer(message)
-                    }
+                    player.kickPlayer(message)
                 }
             }
         }
-    }, Event.Priority.Highest, osm.pl)
+    }
+
+    FakeOnline.instance.loginEventHandlers.add(ipBanChecker)
 
     // Update a player's playtime
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {

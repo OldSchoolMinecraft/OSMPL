@@ -28,7 +28,7 @@ internal val UN_MUTE_COMMAND = Command.make("unmute") {
                 val senderName = if (sender is Player) sender.name else "Console"
 
                 if (user.currentMute != null) {
-                    unPunishmentWebhook(user.name, user.currentBan!!)
+                    unPunishmentWebhook(user.name, user.currentMute!!)
                     user.currentMute = null
 
                     broadcastPermission(

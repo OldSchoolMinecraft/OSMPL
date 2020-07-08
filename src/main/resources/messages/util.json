@@ -145,6 +145,17 @@
             "unentered": "§7There is currently a raffle going on for §8{0}§7. This raffle ends in §8{1}§7 minutes. You have not entered."
         }
     },
+    "particle": {
+        "invalid-particle": "§cInvalid particle type!",
+        "list": "§8Currently available particles: §7halo§8, §7trail§8.",
+        "toggled": "§8Toggled particle §7{0}§8."
+    },
+    "freeze": {
+        "success": "§8The temperature has seemed to drop for §7{0}§8.",
+        "success-off": "§8The temperature has seemed go up for §7{0}§8.",
+        "current": "§8Currently Frozen Players: §7",
+        "frozen": "§8You are currently frozen!"
+    },
     "view-punishments": {
         "invalid-user": "§cThat user could not be found.",
         "invalid-filter": "§cThat punishment type could not be found.",

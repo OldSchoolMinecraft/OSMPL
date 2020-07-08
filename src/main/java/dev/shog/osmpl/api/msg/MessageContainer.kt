@@ -40,9 +40,14 @@ class MessageContainer private constructor(val data: JSONObject) {
          * Get a messaage container from [fileName] in the resource folder.
          */
         fun fromFile(fileName: String): MessageContainer {
-            val reader = MessageContainer::class.java.getResourceAsStream("/${fileName}")
+            return try {
+                val reader = MessageContainer::class.java.getResourceAsStream("/${fileName}")
 
-            return MessageContainer(JSONObject(String(reader.readBytes())))
+                MessageContainer(JSONObject(String(reader.readBytes())))
+            } catch (ex: Exception) {
+                System.err.println("Invalid message container at $fileName")
+                return MessageContainer(JSONObject())
+            }
         }
     }
 }

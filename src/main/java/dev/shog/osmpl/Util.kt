@@ -1,5 +1,6 @@
 package dev.shog.osmpl
 
+import dev.shog.osmpl.api.cmd.CommandContext
 import dev.shog.osmpl.api.data.punishments.Punishment
 import kong.unirest.Unirest
 import org.bukkit.entity.Player
@@ -154,3 +155,10 @@ internal fun unPunishmentWebhook(user: String, punishment: Punishment) {
             "Punishment: `${punishment.type}`, " +
             "Reason: `${punishment.reason}`", "Expired Punishments")
 }
+
+/**
+ * Get an online player
+ */
+fun CommandContext.getOnlinePlayer(name: String): Player? =
+        sender.server.onlinePlayers
+                .singleOrNull { player -> player.name.equals(name, true) }

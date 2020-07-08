@@ -4,7 +4,10 @@ import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.util.commands.disableStaffMode
 import dev.shog.osmpl.hasPermissionOrOp
 import dev.shog.osmpl.util.UtilModule
+import dev.shog.osmpl.util.particles.EffectType
+import dev.shog.osmpl.util.particles.ParticleHandler
 import org.bukkit.ChatColor
+import org.bukkit.Effect
 import org.bukkit.event.Event
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
@@ -81,4 +84,45 @@ internal val SLOW_MODE_AUTO_TOGGLE = { osm: OsmModule ->
             }
         }
     }, Event.Priority.Normal, osm.pl)
+}
+
+/**
+ * Handles players moving.
+ */
+internal val MOVE_HANDLER = { osm: OsmModule ->
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_MOVE, object : PlayerListener() {
+        override fun onPlayerMove(event: PlayerMoveEvent?) {
+            if (event != null) {
+                handleParticles(event)
+            }
+        }
+    }, Event.Priority.Highest, osm.pl) // highest due to frozen
+}
+
+private fun handleParticles(event: PlayerMoveEvent) {
+    val effects = ParticleHandler.getEffectsForPlayer(event.player)
+
+    if (effects != null && !event.isCancelled) {
+        val location = event.player.location
+
+        for (effect in effects) {
+            when (effect) {
+                EffectType.TRAIL -> {
+                    event.player.world.playEffect(
+                            location,
+                            Effect.SMOKE,
+                            2000
+                    )
+                }
+
+                EffectType.HALO -> {
+                    event.player.world.playEffect(
+                            location.add(0.0, 1.5, 0.0),
+                            Effect.SMOKE,
+                            2000
+                    )
+                }
+            }
+        }
+    }
 }
