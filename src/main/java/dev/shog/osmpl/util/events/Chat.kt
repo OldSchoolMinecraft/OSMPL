@@ -51,7 +51,8 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
 
                 if (event.player.hasPermission("osm.coloredchat") || event.player.isOp)
                     event.message = event.message.replace("&", "§")
-                else event.message = ChatColor.stripColor(event.message)
+                else
+                    event.message = ChatColor.stripColor(event.message)
 
                 WebhookHandler.sendDiscordMessage(event.player, ChatColor.stripColor(event.message))
 
@@ -62,7 +63,7 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
                 event.message = osm.messageContainer.getMessage(
                         "chat.default",
                         prefix,
-                        name,
+                        name.replace("&", "§"),
                         suffix,
                         event.message
                 )

@@ -91,6 +91,7 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
         }
 
         ipChecker = IpChecker(config.content.getString("ipHubKey"))
+        ipChecker.refreshVpnGate()
         webHook = config.content.getString("webhook")
 
         slowMode.timing =config.content.getInt("slowModeInSec").toLong()
