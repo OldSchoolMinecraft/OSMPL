@@ -7,6 +7,7 @@ import dev.shog.osmpl.defaultFormat
 import dev.shog.osmpl.fancyDate
 import dev.shog.osmpl.sendWebhookMessage
 import dev.shog.osmpl.tf.DefaultTrustFactorHandler
+import org.bukkit.Server
 import org.bukkit.entity.Player
 import java.io.File
 
@@ -105,7 +106,7 @@ object DataManager {
     fun isIpBanned(ip: String): Boolean =
             data.asSequence()
                     .filter { user -> user.isBanned() }
-                    .any { user -> user.ip == ip }
+                    .any { user -> user.ip != "" && user.ip == ip }
 
     /**
      * Get a user's data.
@@ -119,6 +120,46 @@ object DataManager {
                     .firstOrNull()
 
     /**
+     * Get a user's data, or create it.
+     *
+     * @param name The user's name.
+     * @param server The server instance. This allows it to grab the user's data from the online players.
+     * @return A user instance.
+     */
+    fun getOrCreate(name: String, server: Server): User? {
+        val user = getUserData(name)
+
+        if (user != null)
+            return user
+
+        val player = server.onlinePlayers
+                .singleOrNull { player -> player.name.equals(name, true) }
+                ?: return null
+
+        val ip = player
+                .address
+                ?.hostString
+                ?: ""
+
+        val dataUser = DataUser(
+                name.toLowerCase(),
+                ip,
+                System.currentTimeMillis(),
+                -1,
+                0,
+                System.currentTimeMillis(),
+                arrayListOf(),
+                null
+        )
+
+        val userInst = dataUser.getUser()
+
+        saveUser(userInst)
+
+        return userInst
+    }
+
+    /**
      * Register a user.
      *
      * @param player The player to register.
@@ -127,7 +168,7 @@ object DataManager {
     fun registerUser(player: Player): User {
         val data = DataUser(
                 name = player.name.toLowerCase(),
-                ip = player.address?.hostString ?: throw Exception("An IP could not be resolvUed for ${player.name}"),
+                ip = player.address?.hostString ?: throw Exception("An IP could not be resolved for ${player.name}"),
                 lastLogIn = System.currentTimeMillis(),
                 lastLogOut = -1,
                 playTime = 0,

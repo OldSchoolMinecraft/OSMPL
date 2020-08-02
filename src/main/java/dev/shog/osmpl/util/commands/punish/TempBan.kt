@@ -83,7 +83,7 @@ internal val TEMP_BAN_COMMAND = Command.make("tempban") {
             return@make true
         }
 
-        val user = DataManager.getUserData(player.toLowerCase())
+        val user = DataManager.getOrCreate(player.toLowerCase(), osmModule.pl.server)
 
         if (user == null) {
             sender.sendMessage("${ChatColor.RED}Player was not found!")

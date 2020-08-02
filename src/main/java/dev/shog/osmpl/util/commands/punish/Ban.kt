@@ -17,7 +17,7 @@ internal val BAN_COMMAND = Command.make("ban") {
         return@make false
     else {
         val player = args[0]
-        val user = DataManager.getUserData(player.toLowerCase())
+        val user = DataManager.getOrCreate(player.toLowerCase(), osmModule.pl.server)
 
         if (user == null) {
             sender.sendMessage("${ChatColor.RED}Player was not found!")
