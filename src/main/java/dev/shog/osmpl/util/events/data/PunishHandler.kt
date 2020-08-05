@@ -3,11 +3,29 @@ package dev.shog.osmpl.util.events.data
 import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.api.data.User
 import dev.shog.osmpl.api.data.isExpired
+import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.api.msg.broadcastPermission
 import dev.shog.osmpl.defaultFormat
+import org.bukkit.ChatColor
+import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerLoginEvent
+
+/**
+ * Handle warns.
+ */
+internal fun OsmModule.handleWarn(data: User?, player: Player) {
+    if (data != null) {
+        val warns = data.punishments
+                .filter { punishment -> punishment.type == PunishmentType.WARN }
+                .filter { punishment -> !punishment.isExpired() }
+
+        if (warns.isNotEmpty()) {
+            player.sendMessage(messageContainer.getMessage("warn.info", warns.size, 3))
+        }
+    }
+}
 
 /**
  * Handle a ban.

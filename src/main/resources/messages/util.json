@@ -38,7 +38,8 @@
         "ip-vpn": "§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord."
     },
     "default-ban-messages": {
-        "ip-ban-auto": "User's IP is banned"
+        "ip-ban-auto": "User's IP is banned",
+        "warn-auto": "You have been warned over 3 times. 7 day ban."
     },
     "discord": "§7{0}",
     "hat": {
@@ -188,13 +189,15 @@
             "ban": "§c{0} tried to join but they're banned.",
             "mute": "§c{0} tried to speak but they're muted.",
             "mute-command": "§c{0} tried to run a verbal command, but they're muted."
-        }
+        },
+        "over-warn": "§c{0} has been warned 4 times, so they have been issued a 7 day ban."
     },
     "mute": {
         "avoid": "§cYou can't mute this person!"
     },
     "warn": {
-        "avoid": "§cYou can't warn this person!"
+        "avoid": "§cYou can't warn this person!",
+        "info": "§cYou currently have {0} out of {1} warns! Type /warnings to view them."
     },
     "sleep": {
         "complete": "§8{0}/{1} §7players are in bed, time is now turning to day!",
@@ -207,5 +210,8 @@
     "exception": {
         "kick": "§cYour IP could not be resolved.",
         "ip-vpn": "§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord."
+    },
+    "warnings": {
+        "index": "\n\n§7#{0}: \n  §7Reason: §8{1}\n  §7Expires: §8{2}"
     }
 }

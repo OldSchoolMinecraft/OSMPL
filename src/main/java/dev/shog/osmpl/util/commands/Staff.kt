@@ -44,7 +44,7 @@ internal val STAFF_COMMAND = Command.make("staff") {
 /**
  * When enabling staff mode, this is that player's previous inventory.
  */
-private val STAFF_PREVIOUS_STATE = ConcurrentHashMap<String, Pair<Array<ItemStack>, Array<ItemStack>>>()
+val STAFF_PREVIOUS_STATE = ConcurrentHashMap<String, Pair<Array<ItemStack>, Array<ItemStack>>>()
 
 /**
  * Enable a staff mode for [player].

@@ -21,8 +21,9 @@ import org.bukkit.event.player.*
 internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_LOGIN, object : PlayerListener() {
         override fun onPlayerLogin(event: PlayerLoginEvent?) {
-            if (event != null && DataManager.isUserBanned(event.player.name))
-                osm.handleBan(DataManager.getUserData(event.player.name), event)
+            if (event != null) {
+                if (DataManager.isUserBanned(event.player.name)) osm.handleBan(DataManager.getUserData(event.player.name), event)
+            }
         }
     }, Event.Priority.Highest, osm.pl)
 
@@ -33,46 +34,20 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
         }
     }, Event.Priority.Highest, osm.pl)
 
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, object : PlayerListener() {
-        override fun onPlayerCommandPreprocess(event: PlayerCommandPreprocessEvent?) {
-            if (event != null && DataManager.isUserMuted(event.player.name))
-                osm.handleCommandMute(DataManager.getUserData(event.player.name), event)
-        }
-    }, Event.Priority.Highest, osm.pl)
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
+        override fun onPlayerChat(event: PlayerChatEvent?) {
+            val player = event?.player
 
-    // Manage IP checking and if a user is banned
-    val ipBanChecker = object : FOLoginEvent {
-        override fun loggedIn(player: Player?) {
             if (player != null) {
                 val ip = try {
-                    player.address?.hostString
+                    event.player.address?.hostString
                 } catch (e: Exception) {
                     null
                 }
 
-                when {
-                    ip == null -> {
-                        player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
-                        return
-                    }
-
-                    DataManager.isIpBanned(ip) -> {
-                        osm.pl.server.broadcastPermission(osm.messageContainer.getMessage("admin.ip-ban", player.name, ip), "osm.notify.ips")
-
-                        DataManager.punishUser(
-                                player.name,
-                                "Console",
-                                Punishment(
-                                        System.currentTimeMillis(),
-                                        osm.messageContainer.getMessage("default-ban-messages.ip-ban-auto"),
-                                        PunishmentType.BAN,
-                                        -1
-                                )
-                        )
-
-                        player.kickPlayer(osm.messageContainer.getMessage("banned.ip-banned"))
-                        return
-                    }
+                if (ip == null) {
+                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
+                    return
                 }
 
                 val checkedIp = try {
@@ -98,7 +73,6 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                     return
                 }
 
-
                 when (checkedIp?.block) {
                     2 ->
                         osm.pl.server.broadcastMultiline(
@@ -121,6 +95,49 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                             "osm.ipinfo"
                     )
                 }
+            }
+        }
+    }, Event.Priority.Highest, osm.pl)
+
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, object : PlayerListener() {
+        override fun onPlayerCommandPreprocess(event: PlayerCommandPreprocessEvent?) {
+            if (event != null && DataManager.isUserMuted(event.player.name))
+                osm.handleCommandMute(DataManager.getUserData(event.player.name), event)
+        }
+    }, Event.Priority.Highest, osm.pl)
+
+    // Manage IP checking and if a user is banned
+    val ipBanChecker = object : FOLoginEvent {
+        override fun loggedIn(player: Player?) {
+            if (player != null) {
+                val ip = try {
+                    player.address?.hostString
+                } catch (e: Exception) {
+                    null
+                }
+
+                if (ip == null) {
+                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
+                    return
+                }
+
+                if (DataManager.isIpBanned(ip)) {
+                    osm.pl.server.broadcastPermission(osm.messageContainer.getMessage("admin.ip-ban", player.name, ip), "osm.notify.ips")
+
+                    DataManager.punishUser(
+                            player.name,
+                            "Console",
+                            Punishment(
+                                    System.currentTimeMillis(),
+                                    osm.messageContainer.getMessage("default-ban-messages.ip-ban-auto"),
+                                    PunishmentType.BAN,
+                                    -1
+                            )
+                    )
+
+                    player.kickPlayer(osm.messageContainer.getMessage("banned.ip-banned"))
+                    return
+                }
 
                 if (!DataManager.userExists(player.name.toLowerCase())) {
                     try {
@@ -131,6 +148,8 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                         player.kickPlayer(message)
                     }
                 }
+
+                osm.handleWarn(DataManager.getUserData(player.name), player)
             } else {
                 osm.pl.server.broadcastPermission(
                         "A user logging in was null and their data processing has been stopped.",

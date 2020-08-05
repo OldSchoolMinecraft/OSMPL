@@ -1,7 +1,9 @@
 package dev.shog.osmpl.util
 
 import dev.shog.osmpl.api.OsmModule
+import dev.shog.osmpl.util.commands.STAFF_PREVIOUS_STATE
 import dev.shog.osmpl.util.commands.canSleep
+import dev.shog.osmpl.util.commands.disableStaffMode
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerBedEnterEvent
 import org.bukkit.event.player.PlayerBedLeaveEvent
@@ -22,7 +24,7 @@ internal class BedEvents(private val osmPl: OsmModule) : PlayerListener() {
                     sleepingPlayers.add(event.player)
 
                 val sleeping = sleepingPlayers.size
-                val size = server.onlinePlayers.size
+                val size = server.onlinePlayers.size - STAFF_PREVIOUS_STATE.keys.size
 
                 if (sleeping >= size / 2) {
                     server.getWorld("world").time = 1000
@@ -54,7 +56,7 @@ internal class BedEvents(private val osmPl: OsmModule) : PlayerListener() {
                     sleepingPlayers.remove(event.player)
 
                 if (canSleep(server.getWorld("world"))) {
-                    val size = server.onlinePlayers.size
+                    val size = server.onlinePlayers.size - STAFF_PREVIOUS_STATE.size
 
                     server.broadcastMessage(osmPl.messageContainer.getMessage(
                             "sleep.left",

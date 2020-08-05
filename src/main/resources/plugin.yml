@@ -55,6 +55,9 @@ commands:
         usage: /tempban [username] [time] {reason}
         permission-message: You do not have permission for this!
         permission: osm.tempban
+    warnings:
+        description: View your warnings.
+        usage: /warnings
     unban:
         description: Unban someone.
         usage: /unban [name]
