@@ -1,5 +1,6 @@
 package dev.shog.osmpl.util.commands
 
+import com.earth2me.essentials.Util
 import com.fasterxml.jackson.databind.ObjectMapper
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.hasPermissionOrOp
@@ -102,7 +103,7 @@ internal val LANDMARKS_COMMAND = Command.make("landmarks") {
                 val world = osmModule.pl.server.getWorld(eq.worldName)
                 val loc = Location(world, eq.x, eq.y, eq.z, eq.yaw, eq.pitch)
 
-                sender.teleport(loc)
+                sender.teleport(Util.getSafeDestination(loc))
             }
         }
 

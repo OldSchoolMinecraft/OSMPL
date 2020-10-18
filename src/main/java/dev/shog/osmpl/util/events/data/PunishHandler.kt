@@ -11,6 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerLoginEvent
+import org.bukkit.event.player.PlayerPreLoginEvent
 
 /**
  * Handle warns.
@@ -34,16 +35,16 @@ internal fun OsmModule.handleWarn(data: User?, player: Player) {
  * @param data The data user that corresponds to the banned user.
  * @param event The event that corresponds to the banned user.
  */
-internal fun OsmModule.handleBan(data: User?, event: PlayerLoginEvent) {
+internal fun OsmModule.handleBan(data: User?, event: PlayerPreLoginEvent) {
     val ban = data?.currentBan
 
     if (ban != null) {
         if (ban.isExpired()) {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.ban", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.ban", event.name), "osm.notify.ban")
 
             data.currentBan = null
         } else {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.ban", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.ban", event.name), "osm.notify.ban")
 
             val message = when {
                 ban.expire == -1L ->
@@ -58,8 +59,8 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerLoginEvent) {
 
             if (message.length > 100) {
                 // If the message is over 100 (the allowed amount), slim it down.
-                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, messageContainer.getMessage("banned.invalid"))
-            } else event.disallow(PlayerLoginEvent.Result.KICK_BANNED, message)
+                event.disallow(PlayerPreLoginEvent.Result.KICK_BANNED, messageContainer.getMessage("banned.invalid"))
+            } else event.disallow(PlayerPreLoginEvent.Result.KICK_BANNED, message)
         }
     }
 }

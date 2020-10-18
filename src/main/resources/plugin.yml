@@ -156,9 +156,12 @@ commands:
         permission: osm.rainbow
     particle:
         description: Use particles.
-        usage: /particle [particle name
+        usage: /particle [particle name]
         permission-message: You do not have permission for this!
         permission: osm.particles
+    wild:
+        description: Wild.
+        usage: /wild
 permissions:
     osm.particles:
         description: Use particles.

@@ -19,10 +19,11 @@ import org.bukkit.event.player.*
  * Also manages bans.
  */
 internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_LOGIN, object : PlayerListener() {
-        override fun onPlayerLogin(event: PlayerLoginEvent?) {
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_PRELOGIN, object : PlayerListener() {
+        override fun onPlayerPreLogin(event: PlayerPreLoginEvent?) {
             if (event != null) {
-                if (DataManager.isUserBanned(event.player.name)) osm.handleBan(DataManager.getUserData(event.player.name), event)
+                if (DataManager.isUserBanned(event.name))
+                    osm.handleBan(DataManager.getUserData(event.name), event)
             }
         }
     }, Event.Priority.Highest, osm.pl)
@@ -35,7 +36,7 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
     }, Event.Priority.Highest, osm.pl)
 
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
-        override fun onPlayerChat(event: PlayerChatEvent?) {
+        override fun onPlayerJoin(event: PlayerJoinEvent?) {
             val player = event?.player
 
             if (player != null) {
@@ -73,14 +74,14 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                     return
                 }
 
-                when (checkedIp?.block) {
-                    2 ->
+                when  {
+                    checkedIp?.block == 2 ->
                         osm.pl.server.broadcastMultiline(
                                 osm.messageContainer.getMessage("admin.possible-vpn", player.name, checkedIp.toString()),
                                 "osm.notify.ips"
                         )
 
-                    1 -> {
+                    checkedIp?.block == 1 -> {
                         osm.pl.server.broadcastMultiline(
                                 osm.messageContainer.getMessage("admin.vpn", player.name, checkedIp.toString()),
                                 "osm.notify.ips"

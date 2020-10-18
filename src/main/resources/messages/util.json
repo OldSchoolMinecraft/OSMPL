@@ -213,5 +213,10 @@
     },
     "warnings": {
         "index": "\n\n§7#{0}: \n  §7Reason: §8{1}\n  §7Expires: §8{2}"
+    },
+    "wild": {
+        "not-player": "You must be a player for this command.",
+        "teleporting": "§7You are being teleported to a random location...",
+        "tries": "§cYou can only use this command 3 times per day!"
     }
 }
