@@ -68,8 +68,8 @@ internal val TEMP_MUTE_COMMAND = Command.make("tempmute") {
             val default = "${ChatColor.RED}${user.name} has been muted by $senderName for \"$reason\" until ${parsedTime.defaultFormat()}"
 
             broadcastPermission(
-                    Pair(op, "osm.bannotify"),
-                    Pair(default, "osm.bannotify.sanitized")
+                    Triple(op, "osm.bannotify", true),
+                    Triple(default, "osm.bannotify.sanitized", false)
             )
         }
     }

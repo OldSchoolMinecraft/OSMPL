@@ -32,8 +32,16 @@ internal val UN_MUTE_COMMAND = Command.make("unmute") {
                     user.currentMute = null
 
                     broadcastPermission(
-                            Pair("${ChatColor.RED}${user.name} (${user.ip}) has been unmuted by $senderName", "osm.bannotify"),
-                            Pair("${ChatColor.RED}${user.name} has been unmuted by $senderName", "osm.bannotify.sanitized")
+                            Triple(
+                                    "${ChatColor.RED}${user.name} (${user.ip}) has been unmuted by $senderName",
+                                    "osm.bannotify",
+                                true
+                            ),
+                            Triple(
+                                    "${ChatColor.RED}${user.name} has been unmuted by $senderName",
+                                    "osm.bannotify.sanitized",
+                                    true
+                            )
                     )
                 } else {
                     sender.sendMessage("${ChatColor.RED}That player isn't muted!")

@@ -28,8 +28,16 @@ internal val UN_BAN_COMMAND = Command.make("unban") {
                 user.currentBan = null
 
                 broadcastPermission(
-                        Pair("${ChatColor.RED}${user.name} (${user.ip}) has been unbanned by $senderName", "osm.bannotify"),
-                        Pair("${ChatColor.RED}${user.name} has been unbanned by $senderName", "osm.bannotify.sanitized")
+                        Triple(
+                                "${ChatColor.RED}${user.name} (${user.ip}) has been unbanned by $senderName",
+                                "osm.bannotify",
+                                true
+                        ),
+                        Triple(
+                                "${ChatColor.RED}${user.name} has been unbanned by $senderName",
+                                "osm.bannotify.sanitized",
+                                false
+                        )
                 )
             } else {
                 sender.sendMessage("${ChatColor.RED}That player isn't banned!")

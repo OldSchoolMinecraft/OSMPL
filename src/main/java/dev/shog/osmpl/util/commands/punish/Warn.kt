@@ -53,8 +53,16 @@ internal val WARN_COMMAND = Command.make("warn") {
             )
 
             broadcastPermission(
-                    Pair("${ChatColor.RED}${user.name} (${user.ip}) has been warned by $senderName for \"$reason\"", "osm.bannotify"),
-                    Pair("${ChatColor.RED}${user.name} has been warned by $senderName for \"$reason\"", "osm.bannotify.sanitized")
+                    Triple(
+                            "${ChatColor.RED}${user.name} (${user.ip}) has been warned by $senderName for \"$reason\"",
+                            "osm.bannotify",
+                            true
+                    ),
+                    Triple(
+                            "${ChatColor.RED}${user.name} has been warned by $senderName for \"$reason\"",
+                            "osm.bannotify.sanitized",
+                        true
+                    )
             )
 
             val currentWarns = user.punishments
@@ -65,7 +73,7 @@ internal val WARN_COMMAND = Command.make("warn") {
                 osmModule.pl.server.broadcastPermission(messageContainer.getMessage(
                         "admin.over-warn",
                         user.name
-                ), "osm.notify.ips")
+                ), "osm.notify.ips", true)
 
                 DataManager.punishUser(
                         user.name,

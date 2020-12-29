@@ -53,8 +53,16 @@ internal val MUTE_COMMAND = Command.make("mute") {
             )
 
             broadcastPermission(
-                    Pair("${ChatColor.RED}${user.name} (${user.ip}) has been muted by $senderName for \"$reason\"", "osm.bannotify"),
-                    Pair("${ChatColor.RED}${user.name} has been muted by $senderName for \"$reason\"", "osm.bannotify.sanitized")
+                    Triple(
+                            "${ChatColor.RED}${user.name} (${user.ip}) has been muted by $senderName for \"$reason\"",
+                            "osm.bannotify",
+                            true
+                    ),
+                    Triple(
+                            "${ChatColor.RED}${user.name} has been muted by $senderName for \"$reason\"",
+                            "osm.bannotify.sanitized",
+                            false
+                    )
             )
         }
     }

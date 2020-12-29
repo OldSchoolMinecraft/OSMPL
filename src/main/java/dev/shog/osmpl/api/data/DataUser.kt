@@ -14,5 +14,7 @@ data class DataUser(
         var firstJoin: Long = -1,
         var punishHistory: ArrayList<Punishment> = arrayListOf(),
         var currentBan: Punishment? = null,
-        var currentMute: Punishment? = null
+        var currentMute: Punishment? = null,
+        var kills: Int = 0,
+        var deaths: Int = 0
 )

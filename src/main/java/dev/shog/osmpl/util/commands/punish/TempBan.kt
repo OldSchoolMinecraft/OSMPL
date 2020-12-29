@@ -112,8 +112,16 @@ internal val TEMP_BAN_COMMAND = Command.make("tempban") {
             )
 
             broadcastPermission(
-                    Pair("${ChatColor.RED}${user.name} (${user.ip}) has been banned by $senderName for \"$reason\" until ${parsedTime.defaultFormat()}", "osm.bannotify"),
-                    Pair("${ChatColor.RED}${user.name} has been banned by $senderName for \"$reason\" until ${parsedTime.defaultFormat()}", "osm.bannotify.sanitized")
+                    Triple(
+                            "${ChatColor.RED}${user.name} (${user.ip}) has been banned by $senderName for \"$reason\" until ${parsedTime.defaultFormat()}",
+                            "osm.bannotify",
+                            true
+                    ),
+                    Triple(
+                            "${ChatColor.RED}${user.name} has been banned by $senderName for \"$reason\" until ${parsedTime.defaultFormat()}",
+                            "osm.bannotify.sanitized",
+                            false
+                    )
             )
         }
     }

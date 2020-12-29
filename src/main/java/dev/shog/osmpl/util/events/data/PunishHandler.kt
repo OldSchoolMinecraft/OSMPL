@@ -40,11 +40,19 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerPreLoginEvent) {
 
     if (ban != null) {
         if (ban.isExpired()) {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.ban", event.name), "osm.notify.ban")
+            pl.server.broadcastPermission(
+                    messageContainer.getMessage("admin.expired.ban", event.name),
+                    "osm.notify.ban",
+                    true
+            )
 
             data.currentBan = null
         } else {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.ban", event.name), "osm.notify.ban")
+            pl.server.broadcastPermission(
+                    messageContainer.getMessage("admin.tried.ban", event.name),
+                    "osm.notify.ban",
+                    true
+            )
 
             val message = when {
                 ban.expire == -1L ->
@@ -65,7 +73,7 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerPreLoginEvent) {
     }
 }
 
-val MUTE_CMD = arrayListOf("me", "r", "msg", "er", "emsg", "eme")
+val MUTE_CMD = arrayListOf("me", "r", "msg", "er", "emsg", "eme", "tell")
 
 /**
  * Handle a mute.
@@ -81,7 +89,11 @@ internal fun OsmModule.handleCommandMute(data: User?, event: PlayerCommandPrepro
                 .contains(true)
 
         if (bannedCmd) {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.mute-command", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(
+                    messageContainer.getMessage("admin.tried.mute-command", event.player.name),
+                    "osm.notify.ban",
+                    true
+            )
 
             val message = when {
                 mute.expire == -1L ->
@@ -108,13 +120,21 @@ internal fun OsmModule.handleMute(data: User?, event: PlayerChatEvent) {
 
     if (mute != null) {
         if (mute.isExpired()) {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.expired.mute", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(
+                    messageContainer.getMessage("admin.expired.mute", event.player.name),
+                    "osm.notify.ban",
+                    true
+            )
 
             data.currentMute = null
 
             event.player.sendMessage(messageContainer.getMessage("admin.expired.player-mute", event.player.name))
         } else {
-            pl.server.broadcastPermission(messageContainer.getMessage("admin.tried.mute", event.player.name), "osm.notify.ban")
+            pl.server.broadcastPermission(
+                    messageContainer.getMessage("admin.tried.mute", event.player.name),
+                    "osm.notify.ban",
+                    true
+            )
 
             val message = when {
                 mute.expire == -1L ->

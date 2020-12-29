@@ -1,4 +1,16 @@
 {
+    "streak": {
+        "default": "§7You have logged in for §8{0} §7days in a row. You have received §8${1}§7.",
+        "broke": "§7Your streak of §8{0}§7 days has been lost!",
+        "command": {
+            "default": "§7You're currently at a login streak of §8{0}§7! Your next reward is §8${1}§7. Login in §8{2}§7 to up your streak."
+        }
+    },
+    "tsm": {
+        "enabled": "§7Staff messages have been re-enabled.",
+        "disabled": "§7Staff messages have been temporarilty disabled!"
+    },
+    "halloween": "§6{0} has found a Halloween badge in a mob!",
     "restart": "§cA restart will be commencing in 1 minute.",
     "playerDeath": "§8{0}§7 {1}",
     "trustfactor": {
@@ -25,6 +37,13 @@
         "user-entry": "§8{0}§7. {1}§7: §8{2}",
         "error": "§cYou couldn't be found on the leaderboard!",
         "loc": "§7You are currently §8#{0}§7 on the leaderboard."
+    },
+    "kdlb": {
+        "header": "§7Users with the top KD (refreshes hourly):\n{0}",
+        "user-entry": "§8{0}§7. {1}§7: §8{2} §7(§8{3}§7/§7{4}§7)",
+        "error": "§cYou couldn't be found on the leaderboard!",
+        "loc": "§7You are currently §8#{0}§7 on the leaderboard.",
+        "current": "§8{0} §7(§8{1}§7/§8{2}§7)"
     },
     "baltop": {
         "header": "§7Users with the top balance (refreshes hourly):\n{0}",
@@ -148,7 +167,7 @@
     },
     "particle": {
         "invalid-particle": "§cInvalid particle type!",
-        "list": "§8Currently available particles: §7halo§8, §7trail§8.",
+        "list": "§8Currently available particles: {0}§8.",
         "toggled": "§8Toggled particle §7{0}§8."
     },
     "freeze": {
@@ -175,7 +194,8 @@
         "remove-complete": "Your name is no longer rainbow-ified!"
     },
     "admin": {
-        "ip-ban": "§c{0}'s ip ({1}) has been previously banned, they have been banned.",
+        "ip-block": "§c{0} has connected on a banned ip ({1}), they have been kicked.",
+        "ip-ban": "§c{0}'s ip ({1}) has been previously banned, they have been banned.\nAccounts that were banned: {2}",
         "unable-check-vpn": "§c{0} was unable to be checked for a VPN.",
         "possible-vpn": "§c{0} most likely has a VPN:\n{1}",
         "vpn": "§c{0} has a VPN (kicked):\n{1}",

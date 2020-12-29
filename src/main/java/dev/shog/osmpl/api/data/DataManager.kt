@@ -103,10 +103,10 @@ object DataManager {
      * @param ip The IP to check for.
      * @return If the IP is banned.
      */
-    fun isIpBanned(ip: String): Boolean =
+    fun isIpBanned(ip: String): Sequence<User> =
             data.asSequence()
                     .filter { user -> user.isBanned() }
-                    .any { user -> user.ip != "" && user.ip == ip }
+                    .filter { user -> user.ip != "" && user.ip == ip }
 
     /**
      * Get a user's data.
@@ -149,7 +149,10 @@ object DataManager {
                 0,
                 System.currentTimeMillis(),
                 arrayListOf(),
-                null
+                null,
+                null,
+                0,
+                0
         )
 
         val userInst = dataUser.getUser()
@@ -174,7 +177,10 @@ object DataManager {
                 playTime = 0,
                 firstJoin = System.currentTimeMillis(),
                 punishHistory = arrayListOf(),
-                currentBan = null
+                currentBan = null,
+                currentMute = null,
+                kills = 0,
+                deaths = 0
         )
 
         val user = data.getUser()
@@ -227,7 +233,6 @@ object DataManager {
 
             when (punishment.type) {
                 PunishmentType.BAN -> data.currentBan = punishment
-
                 PunishmentType.MUTE -> data.currentMute = punishment
             }
         }

@@ -23,7 +23,7 @@ dependencies {
     implementation 'com.konghq:unirest-java:3.7.02'
     implementation 'org.json:json:20190722'
     implementation 'mysql:mysql-connector-java:8.0.15'
-    implementation "com.discord4j:discord4j-core:3.1.0.M2"
+    implementation "com.discord4j:discord4j-core:3.1.3"
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
     // For Jar
@@ -35,7 +35,7 @@ dependencies {
     provided "com.discord4j:discord4j-core:3.1.0.M2"
 
     implementation(files("/libs/Project-Poseidon.jar"))
-    implementation(files("/libs/FakeOnline.jar"))
+    implementation(files("/libs/OSAS.jar"))
     implementation(files("/libs/Essentials.jar"))
     implementation(files("/libs/VanishNoPickup.jar"))
     implementation(files("/libs/PermissionsEX.jar"))

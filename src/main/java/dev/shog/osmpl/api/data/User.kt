@@ -16,6 +16,20 @@ class User(internal val dataUser: DataUser) {
 
     val ip: String = dataUser.ip
 
+    var kills: Int = dataUser.kills
+        set(value) {
+            field = value
+            dataUser.kills = value
+            DataManager.saveUser(this)
+        }
+
+    var deaths: Int = dataUser.deaths
+        set(value) {
+            field = value
+            dataUser.deaths = value
+            DataManager.saveUser(this)
+        }
+
     var currentBan: Punishment? = dataUser.currentBan
         set(value) {
             field = value

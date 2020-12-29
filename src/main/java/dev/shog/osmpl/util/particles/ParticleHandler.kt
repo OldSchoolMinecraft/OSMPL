@@ -13,11 +13,13 @@ object ParticleHandler {
     fun toggleEffect(player: Player, effect: EffectType) {
         val playerEffects = effects[player.name.toLowerCase()]
 
+        println(effects)
+
         when {
             playerEffects == null ->
                 effects[player.name.toLowerCase()] = mutableListOf(effect)
 
-            effects.contains(effect) -> {
+            playerEffects.contains(effect) -> {
                 playerEffects.remove(effect)
                 effects[player.name.toLowerCase()] = playerEffects
             }

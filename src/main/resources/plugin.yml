@@ -162,6 +162,15 @@ commands:
     wild:
         description: Wild.
         usage: /wild
+    kdlb:
+        description: Kill/death leaderboard.
+        usage: /kdlb
+    togglestaffmessages:
+        description: Toggle staff messages
+        usage: /togglestaffmessage
+    streak:
+        description: View your login streak.
+        usage: /streak
 permissions:
     osm.particles:
         description: Use particles.

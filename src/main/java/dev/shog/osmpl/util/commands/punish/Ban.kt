@@ -45,8 +45,16 @@ internal val BAN_COMMAND = Command.make("ban") {
             )
 
             broadcastPermission(
-                    Pair("${ChatColor.RED}${user.name} (${user.ip}) has been banned by $senderName for \"$reason\"", "osm.bannotify"),
-                    Pair("${ChatColor.RED}${user.name} has been banned by $senderName for \"$reason\"", "osm.bannotify.sanitized")
+                    Triple(
+                            "${ChatColor.RED}${user.name} (${user.ip}) has been banned by $senderName for \"$reason\"",
+                            "osm.bannotify",
+                            true
+                    ),
+                    Triple(
+                            "${ChatColor.RED}${user.name} has been banned by $senderName for \"$reason\"",
+                            "osm.bannotify.sanitized",
+                            false
+                    )
             )
         }
     }

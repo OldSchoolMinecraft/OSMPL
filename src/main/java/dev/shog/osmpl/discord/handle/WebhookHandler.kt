@@ -1,9 +1,9 @@
 package dev.shog.osmpl.discord.handle
 
+import com.oldschoolminecraft.osas.OSAS
 import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.data.DataManager
 import kong.unirest.Unirest
-import me.moderator_man.fo.FakeOnline
 import org.bukkit.entity.Player
 import reactor.core.publisher.toMono
 
@@ -16,7 +16,14 @@ object WebhookHandler {
      */
     fun invoke(message: String, name: String) {
         ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
-                .flatMap { image -> sendMessage(message, name, image, OsmPl.discordLink.config.content.getString("url")) }
+                .flatMap { image ->
+                    sendMessage(
+                            message.replace(Regex("<((@!?\\d+)|(:.+?:\\d+)|(&\\d+))>"), ""),
+                            name,
+                            image,
+                            OsmPl.discordLink.config.content.getString("url")
+                    )
+                }
                 .subscribe()
     }
 
@@ -24,7 +31,7 @@ object WebhookHandler {
      * Send the message.
      */
     fun sendDiscordMessage(player: Player, message: String) {
-        if (!FakeOnline.instance.um.isAuthenticated(player.name) || DataManager.isUserMuted(player.name))
+        if (!OSAS.instance.fallbackManager.isAuthenticated(player.name) || DataManager.isUserMuted(player.name))
             return
 
         if (CursedDataHandler.isCursed(message.split(" "))) {
@@ -39,10 +46,10 @@ object WebhookHandler {
      * Send a message through the webhook.
      */
     private fun sendMessage(
-        message: String,
-        username: String,
-        image: String,
-        hook: String
+            message: String,
+            username: String,
+            image: String,
+            hook: String
     ) = Unirest.post(hook)
             .header("Content-Type", "application/json")
             .body(getJsonObject(username, image, message))
@@ -50,5 +57,5 @@ object WebhookHandler {
             .toMono()
 
     private fun getJsonObject(username: String, image: String, content: String): String =
-        "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"
+            "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"
 }
