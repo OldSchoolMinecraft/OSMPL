@@ -5,6 +5,7 @@ import dev.shog.osmpl.discord.handle.WebhookHandler
 import dev.shog.osmpl.util.UtilModule
 import dev.shog.osmpl.util.commands.applyRainbow
 import dev.shog.osmpl.util.commands.colorful
+import kotlinx.coroutines.runBlocking
 import org.bukkit.ChatColor
 import org.bukkit.event.Event
 import org.bukkit.event.player.PlayerChatEvent
@@ -54,7 +55,9 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
                 else
                     event.message = ChatColor.stripColor(event.message)
 
-                WebhookHandler.sendDiscordMessage(event.player, ChatColor.stripColor(event.message))
+                runBlocking {
+                    WebhookHandler.sendDiscordMessage(event.player, ChatColor.stripColor(event.message))
+                }
 
                 val name = if (colorful.contains(event.player.name.toLowerCase()))
                     applyRainbow(event.player.displayName)

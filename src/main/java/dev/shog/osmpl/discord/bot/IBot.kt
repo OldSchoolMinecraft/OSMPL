@@ -1,10 +1,10 @@
 package dev.shog.osmpl.discord.bot
 
-import discord4j.core.GatewayDiscordClient
+import dev.kord.core.Kord
 
 /**
  * A bot.
  */
 interface IBot {
-    fun getClient(): GatewayDiscordClient
+    suspend fun getClient(): Kord
 }

@@ -10,7 +10,6 @@ import dev.shog.osmpl.api.RemoteRestart
 import dev.shog.osmpl.api.SqlHandler
 import dev.shog.osmpl.tf.TrustFactorModule
 import dev.shog.osmpl.util.UtilModule
-import reactor.core.publisher.Hooks
 
 
 /**
@@ -41,8 +40,6 @@ class OsmPl : OsmPlugin() {
         super.onEnable()
 
         SqlHandler.initValues(this)
-
-        Hooks.onOperatorDebug()
 
         try {
             configuration.getStringList("disabled", listOf())?.forEach { disable ->

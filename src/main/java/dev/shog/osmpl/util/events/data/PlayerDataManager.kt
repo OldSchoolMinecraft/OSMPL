@@ -64,43 +64,48 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                     null
                 }
 
-                val gate = UtilModule.ipChecker.checkVpnGate(ip.orElse(""))
+                if (ip != "127.0.0.1") {
+                    val gate = UtilModule.ipChecker.checkVpnGate(ip.orElse(""))
 
-                if (gate != null) {
-                    osm.pl.server.broadcastMultiline(
+                    if (gate != null) {
+                        osm.pl.server.broadcastMultiline(
                             osm.messageContainer.getMessage("admin.vpn", player.name, gate.toString()),
                             "osm.notify.ips",
                             true
-                    )
-
-                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
-                    return
-                }
-
-                when  {
-                    checkedIp?.block == 2 ->
-                        osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.possible-vpn", player.name, checkedIp.toString()),
-                                "osm.notify.ips",
-                                true
                         )
 
-                    checkedIp?.block == 1 -> {
-                        osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.vpn", player.name, checkedIp.toString()),
-                                "osm.notify.ips",
-                                true
-                        )
-
+                        println("gate is null")
                         player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
                         return
                     }
 
-                    else -> osm.pl.server.broadcastPermission(
+                    when (checkedIp?.block) {
+                        2 ->
+                            osm.pl.server.broadcastMultiline(
+                                osm.messageContainer.getMessage("admin.possible-vpn", player.name, checkedIp.toString()),
+                                "osm.notify.ips",
+                                true
+                            )
+
+                        1 -> {
+                            osm.pl.server.broadcastMultiline(
+                                osm.messageContainer.getMessage("admin.vpn", player.name, checkedIp.toString()),
+                                "osm.notify.ips",
+                                true
+                            )
+
+                            println(checkedIp)
+
+                            player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
+                            return
+                        }
+
+                        else -> osm.pl.server.broadcastPermission(
                             osm.messageContainer.getMessage("admin.ip-info", player.name, checkedIp.toString()),
                             "osm.ipinfo",
                             true
-                    )
+                        )
+                    }
                 }
             }
         }

@@ -4,8 +4,9 @@ import com.oldschoolminecraft.osas.OSAS
 import dev.shog.osmpl.OsmPl
 import dev.shog.osmpl.api.data.DataManager
 import kong.unirest.Unirest
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
-import reactor.core.publisher.toMono
 
 /**
  * Manage the webhook
@@ -14,23 +15,23 @@ object WebhookHandler {
     /**
      * Invoke for a listener.
      */
-    fun invoke(message: String, name: String) {
-        ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
-                .flatMap { image ->
-                    sendMessage(
-                            message.replace(Regex("<((@!?\\d+)|(:.+?:\\d+)|(&\\d+))>"), ""),
-                            name,
-                            image,
-                            OsmPl.discordLink.config.content.getString("url")
-                    )
-                }
-                .subscribe()
+    suspend fun invoke(message: String, name: String) {
+        val image = ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
+
+        GlobalScope.launch {
+            sendMessage(
+                message.replace(Regex("<((@!?\\d+)|(:.+?:\\d+)|(&\\d+))>"), ""),
+                name,
+                image ?: "",
+                OsmPl.discordLink.config.content.getString("url")
+            ).join()
+        }
     }
 
     /**
      * Send the message.
      */
-    fun sendDiscordMessage(player: Player, message: String) {
+    suspend fun sendDiscordMessage(player: Player, message: String) {
         if (!OSAS.instance.fallbackManager.isAuthenticated(player.name) || DataManager.isUserMuted(player.name))
             return
 
@@ -54,7 +55,6 @@ object WebhookHandler {
             .header("Content-Type", "application/json")
             .body(getJsonObject(username, image, message))
             .asStringAsync()
-            .toMono()
 
     private fun getJsonObject(username: String, image: String, content: String): String =
             "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"

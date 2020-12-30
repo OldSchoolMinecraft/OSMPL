@@ -1,5 +1,6 @@
 package dev.shog.osmpl.discord
 
+import dev.kord.core.Kord
 import dev.shog.osmpl.api.OsmModule
 import dev.shog.osmpl.api.OsmPlugin
 import dev.shog.osmpl.api.cfg.Configuration
@@ -8,7 +9,7 @@ import dev.shog.osmpl.api.msg.MessageContainer
 import dev.shog.osmpl.api.msg.sendMessage
 import dev.shog.osmpl.discord.bot.getBot
 import dev.shog.osmpl.discord.handle.CursedDataHandler
-import discord4j.core.GatewayDiscordClient
+import kotlinx.coroutines.runBlocking
 import org.bukkit.ChatColor
 
 /**
@@ -19,7 +20,7 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
     override val messageContainer: MessageContainer = MessageContainer.fromFile("messages/dl.json")
 
     companion object {
-        lateinit var client: GatewayDiscordClient
+        lateinit var client: Kord
     }
 
     override fun onEnable() {
@@ -94,7 +95,9 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
 
 
         pl.server.scheduler.scheduleAsyncDelayedTask(pl) {
-            client = getBot().getClient()
+            runBlocking {
+                client = getBot().getClient()
+            }
         }
     }
 
