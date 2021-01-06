@@ -1,6 +1,6 @@
 package dev.shog.osmpl.util.commands
 
-import com.nilla.vanishnopickup.VanishNoPickup
+import com.oldschoolminecraft.vanish.Invisiman
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.msg.sendMultiline
 import org.bukkit.Bukkit.getServer
@@ -9,16 +9,12 @@ import ru.tehkode.permissions.PermissionUser
 import ru.tehkode.permissions.bukkit.PermissionsEx
 import java.util.concurrent.ConcurrentHashMap
 
-private val VANISH_NO_PICKUP by lazy {
-    getServer().pluginManager.getPlugin("VanishNoPickup") as VanishNoPickup
-}
-
 /**
  * The list command.
  */
 internal val LIST_COMMAND = Command.make("list") {
     val players = osmModule.pl.server.onlinePlayers
-            .filterNot { p -> VANISH_NO_PICKUP.isPlayerHidden(p.name) || VANISH_NO_PICKUP.isPlayerInvisible(p.name) }
+            .filterNot { p -> Invisiman.instance.isVanished(p) }
 
     val groups = ConcurrentHashMap<PermissionGroup, ArrayList<PermissionUser>>()
 

@@ -33,7 +33,7 @@ dependencies {
     implementation(files("/libs/Project-Poseidon.jar"))
     implementation(files("/libs/OSAS.jar"))
     implementation(files("/libs/Essentials.jar"))
-    implementation(files("/libs/VanishNoPickup.jar"))
+    implementation(files("/libs/Invisiman.jar"))
     implementation(files("/libs/PermissionsEX.jar"))
     implementation(files("/libs/Lockette.jar"))
 }

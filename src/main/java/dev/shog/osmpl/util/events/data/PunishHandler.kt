@@ -1,17 +1,47 @@
 package dev.shog.osmpl.util.events.data
 
 import dev.shog.osmpl.api.OsmModule
+import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.api.data.User
 import dev.shog.osmpl.api.data.isExpired
 import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.api.msg.broadcastPermission
 import dev.shog.osmpl.defaultFormat
+import net.minecraft.server.PlayerList
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerChatEvent
-import org.bukkit.event.player.PlayerCommandPreprocessEvent
-import org.bukkit.event.player.PlayerLoginEvent
-import org.bukkit.event.player.PlayerPreLoginEvent
+import org.bukkit.event.player.*
+
+object PunishHandler {
+    val BAN_HANDLE: (OsmModule) -> PlayerListener = { osm: OsmModule ->
+        object : PlayerListener() {
+            override fun onPlayerPreLogin(event: PlayerPreLoginEvent?) {
+                if (event != null) {
+                    if (DataManager.isUserBanned(event.name))
+                        osm.handleBan(DataManager.getUserData(event.name), event)
+                }
+            }
+        }
+    }
+
+    val MUTE_HANDLE: (OsmModule) -> PlayerListener = { osm: OsmModule ->
+        object : PlayerListener() {
+            override fun onPlayerChat(event: PlayerChatEvent?) {
+                if (event != null && DataManager.isUserMuted(event.player.name))
+                    osm.handleMute(DataManager.getUserData(event.player.name), event)
+            }
+        }
+    }
+
+    val MUTE_COMMAND_HANDLE: (OsmModule) -> PlayerListener = { osm: OsmModule ->
+        object : PlayerListener() {
+            override fun onPlayerCommandPreprocess(event: PlayerCommandPreprocessEvent?) {
+                if (event != null && DataManager.isUserMuted(event.player.name))
+                    osm.handleCommandMute(DataManager.getUserData(event.player.name), event)
+            }
+        }
+    }
+}
 
 /**
  * Handle warns.
@@ -19,8 +49,8 @@ import org.bukkit.event.player.PlayerPreLoginEvent
 internal fun OsmModule.handleWarn(data: User?, player: Player) {
     if (data != null) {
         val warns = data.punishments
-                .filter { punishment -> punishment.type == PunishmentType.WARN }
-                .filter { punishment -> !punishment.isExpired() }
+            .filter { punishment -> punishment.type == PunishmentType.WARN }
+            .filter { punishment -> !punishment.isExpired() }
 
         if (warns.isNotEmpty()) {
             player.sendMessage(messageContainer.getMessage("warn.info", warns.size, 3))
@@ -41,17 +71,17 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerPreLoginEvent) {
     if (ban != null) {
         if (ban.isExpired()) {
             pl.server.broadcastPermission(
-                    messageContainer.getMessage("admin.expired.ban", event.name),
-                    "osm.notify.ban",
-                    true
+                messageContainer.getMessage("admin.expired.ban", event.name),
+                "osm.notify.ban",
+                true
             )
 
             data.currentBan = null
         } else {
             pl.server.broadcastPermission(
-                    messageContainer.getMessage("admin.tried.ban", event.name),
-                    "osm.notify.ban",
-                    true
+                messageContainer.getMessage("admin.tried.ban", event.name),
+                "osm.notify.ban",
+                true
             )
 
             val message = when {
@@ -73,6 +103,9 @@ internal fun OsmModule.handleBan(data: User?, event: PlayerPreLoginEvent) {
     }
 }
 
+/**
+ * Commands that shouldn't be usable while muted.
+ */
 val MUTE_CMD = arrayListOf("me", "r", "msg", "er", "emsg", "eme", "tell")
 
 /**
@@ -85,14 +118,14 @@ internal fun OsmModule.handleCommandMute(data: User?, event: PlayerCommandPrepro
         val cmdStr = event.message.split(" ")[0]
 
         val bannedCmd = MUTE_CMD
-                .map { cmd -> cmdStr.equals("/$cmd", true) }
-                .contains(true)
+            .map { cmd -> cmdStr.equals("/$cmd", true) }
+            .contains(true)
 
         if (bannedCmd) {
             pl.server.broadcastPermission(
-                    messageContainer.getMessage("admin.tried.mute-command", event.player.name),
-                    "osm.notify.ban",
-                    true
+                messageContainer.getMessage("admin.tried.mute-command", event.player.name),
+                "osm.notify.ban",
+                true
             )
 
             val message = when {
@@ -121,9 +154,9 @@ internal fun OsmModule.handleMute(data: User?, event: PlayerChatEvent) {
     if (mute != null) {
         if (mute.isExpired()) {
             pl.server.broadcastPermission(
-                    messageContainer.getMessage("admin.expired.mute", event.player.name),
-                    "osm.notify.ban",
-                    true
+                messageContainer.getMessage("admin.expired.mute", event.player.name),
+                "osm.notify.ban",
+                true
             )
 
             data.currentMute = null
@@ -131,9 +164,9 @@ internal fun OsmModule.handleMute(data: User?, event: PlayerChatEvent) {
             event.player.sendMessage(messageContainer.getMessage("admin.expired.player-mute", event.player.name))
         } else {
             pl.server.broadcastPermission(
-                    messageContainer.getMessage("admin.tried.mute", event.player.name),
-                    "osm.notify.ban",
-                    true
+                messageContainer.getMessage("admin.tried.mute", event.player.name),
+                "osm.notify.ban",
+                true
             )
 
             val message = when {

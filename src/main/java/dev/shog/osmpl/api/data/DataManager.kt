@@ -9,10 +9,38 @@ import dev.shog.osmpl.sendWebhookMessage
 import dev.shog.osmpl.tf.DefaultTrustFactorHandler
 import org.bukkit.Server
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerListener
+import org.bukkit.event.player.PlayerQuitEvent
 import java.io.File
 
 object DataManager {
-    /**
+    val PLAYER_JOIN_EVENT = object : PlayerListener() {
+        override fun onPlayerJoin(event: PlayerJoinEvent?) {
+            if (event != null) {
+                val data = getUserData(event.player.name)
+
+                data?.lastLogIn = System.currentTimeMillis()
+            }
+        }
+    }
+
+    val PLAYER_LEAVE_EVENT = object : PlayerListener() {
+        override fun onPlayerQuit(event: PlayerQuitEvent?) {
+            if (event != null) {
+                val data = getUserData(event.player.name)
+
+                if (data != null) {
+                    val time = System.currentTimeMillis()
+
+                    data.lastLogOut = time
+                    data.playTime = (time - data.lastLogIn) + data.playTime
+                }
+            }
+        }
+    }
+
+        /**
      * Users
      */
     val data: MutableList<User> by lazy {
@@ -220,7 +248,8 @@ object DataManager {
                     if (punishment.expire == -1L) 
                         "Forever" 
                     else (punishment.expire - System.currentTimeMillis()).fancyDate()
-                }`", admin)
+                }`", admin
+        )
 
         if (data != null) {
             val punishments = data.punishments

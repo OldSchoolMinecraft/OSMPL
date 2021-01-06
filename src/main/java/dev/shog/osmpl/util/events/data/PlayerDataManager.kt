@@ -8,6 +8,7 @@ import dev.shog.osmpl.api.data.punishments.PunishmentType
 import dev.shog.osmpl.api.msg.broadcastMultiline
 import dev.shog.osmpl.api.msg.broadcastPermission
 import dev.shog.osmpl.util.UtilModule
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -20,21 +21,9 @@ import org.bukkit.event.player.*
  * Also manages bans.
  */
 internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_PRELOGIN, object : PlayerListener() {
-        override fun onPlayerPreLogin(event: PlayerPreLoginEvent?) {
-            if (event != null) {
-                if (DataManager.isUserBanned(event.name))
-                    osm.handleBan(DataManager.getUserData(event.name), event)
-            }
-        }
-    }, Event.Priority.Highest, osm.pl)
-
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, object : PlayerListener() {
-        override fun onPlayerChat(event: PlayerChatEvent?) {
-            if (event != null && DataManager.isUserMuted(event.player.name))
-                osm.handleMute(DataManager.getUserData(event.player.name), event)
-        }
-    }, Event.Priority.Highest, osm.pl)
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_PRELOGIN, PunishHandler.BAN_HANDLE(osm), Event.Priority.Highest, osm.pl)
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, PunishHandler.MUTE_HANDLE(osm), Event.Priority.Highest, osm.pl)
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, PunishHandler.MUTE_COMMAND_HANDLE(osm), Event.Priority.Highest, osm.pl)
 
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
         override fun onPlayerJoin(event: PlayerJoinEvent?) {
@@ -48,17 +37,47 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                 }
 
                 if (ip == null) {
-                    player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
+                    player.kickPlayer("${ChatColor.RED}Your IP could not be resolved.")
                     return
                 }
+
+                val ipBanned = DataManager.isIpBanned(ip)
+
+                if (ipBanned.any()) {
+                    osm.pl.server.broadcastPermission(
+                        "${ChatColor.RED}${player.name} has connected on a banned ip ($ip), they have been kicked.",
+                        "osm.notify.ips",
+                        true
+                    )
+
+                    player.kickPlayer("${ChatColor.RED}You have connected on an IP that has been previously banned.")
+
+                    return
+                }
+
+                if (!DataManager.userExists(player.name.toLowerCase())) {
+                    try {
+                        DataManager.registerUser(player)
+                    } catch (ex: Exception) { // This happens if the IP could not be resolved.
+                        player.kickPlayer("${ChatColor.RED}Your IP could not be resolved.")
+
+                        osm.pl.server.broadcastPermission(
+                            "${ChatColor.RED}${player.name}'s IP couldn't be resolved and was kicked.",
+                            "osm.notify.ips",
+                            true
+                        )
+                    }
+                }
+
+                osm.handleWarn(DataManager.getUserData(player.name), player)
 
                 val checkedIp = try {
                     UtilModule.ipChecker.checkIp(ip.orElse(""))
                 } catch (e: Exception) {
                     osm.pl.server.broadcastPermission(
-                            osm.messageContainer.getMessage("admin.unable-check-vpn", player.name),
-                            "osm.notify.ips",
-                            true
+                        "§c${player.name} was unable to be checked for a VPN.",
+                        "osm.notify.ips",
+                        true
                     )
 
                     null
@@ -69,134 +88,58 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
 
                     if (gate != null) {
                         osm.pl.server.broadcastMultiline(
-                            osm.messageContainer.getMessage("admin.vpn", player.name, gate.toString()),
+                            "§c${player.name} has a VPN (kicked):\n${gate.toString()}",
                             "osm.notify.ips",
                             true
                         )
 
-                        println("gate is null")
-                        player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
+                        player.kickPlayer("§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord.")
                         return
                     }
 
                     when (checkedIp?.block) {
                         2 ->
                             osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.possible-vpn", player.name, checkedIp.toString()),
+                                "§c${player.name} most likely has a VPN:\n$checkedIp",
                                 "osm.notify.ips",
                                 true
                             )
 
                         1 -> {
                             osm.pl.server.broadcastMultiline(
-                                osm.messageContainer.getMessage("admin.vpn", player.name, checkedIp.toString()),
+                                "§c${player.name} has a VPN (kicked):\n$checkedIp",
                                 "osm.notify.ips",
                                 true
                             )
 
-                            println(checkedIp)
-
-                            player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-vpn"))
+                            player.kickPlayer("§cThe IP you are using is most likely a VPN. If you think this is wrong, message us on Discord.")
                             return
                         }
 
                         else -> osm.pl.server.broadcastPermission(
-                            osm.messageContainer.getMessage("admin.ip-info", player.name, checkedIp.toString()),
+                            "§c${player.name}: $checkedIp",
                             "osm.ipinfo",
                             true
                         )
                     }
                 }
+            } else {
+                osm.pl.server.broadcastPermission(
+                    "${ChatColor.RED}A user logging in was null and their data processing has been stopped.",
+                    "osm.ipinfo",
+                    true
+                )
             }
         }
     }, Event.Priority.Highest, osm.pl)
 
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, object : PlayerListener() {
-        override fun onPlayerCommandPreprocess(event: PlayerCommandPreprocessEvent?) {
-            if (event != null && DataManager.isUserMuted(event.player.name))
-                osm.handleCommandMute(DataManager.getUserData(event.player.name), event)
-        }
-    }, Event.Priority.Highest, osm.pl)
+    // Update a user's join time
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, DataManager.PLAYER_JOIN_EVENT, Event.Priority.Lowest, osm.pl)
 
-    // :)
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_LOGIN, object : PlayerListener() {
-        override fun onPlayerLogin(event: PlayerLoginEvent?) {
-            if (event != null) {
-                val player = event.player
+    // Update a user's leave time
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, DataManager.PLAYER_LEAVE_EVENT, Event.Priority.Lowest, osm.pl)
 
-                if (player != null) {
-                    val ip = try {
-                        player.address?.hostString
-                    } catch (e: Exception) {
-                        null
-                    }
-
-                    if (ip == null) {
-                        player.kickPlayer(osm.messageContainer.getMessage("player-join.ip-not-resolved"))
-                        return
-                    }
-
-                    val ipBanned = DataManager.isIpBanned(ip)
-
-                    if (ipBanned.any()) {
-                        osm.pl.server.broadcastPermission(
-                            osm.messageContainer.getMessage("admin.ip-block", player.name, ip),
-                            "osm.notify.ips",
-                            true
-                        )
-
-                        return
-                    }
-
-                    if (!DataManager.userExists(player.name.toLowerCase())) {
-                        try {
-                            DataManager.registerUser(player)
-                        } catch (ex: Exception) { // This happens if the IP could not be resolved.
-                            val message = osm.messageContainer.getMessage("player-join.ip-not-resolved")
-
-                            player.kickPlayer(message)
-                        }
-                    }
-
-                    osm.handleWarn(DataManager.getUserData(player.name), player)
-                } else {
-                    osm.pl.server.broadcastPermission(
-                        "A user logging in was null and their data processing has been stopped.",
-                        "osm.ipinfo",
-                        true
-                    )
-                }
-            }
-        }
-    }, Event.Priority.Highest, osm.pl)
-
-    // Update a player's playtime
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
-        override fun onPlayerJoin(event: PlayerJoinEvent?) {
-            if (event != null) {
-                val data = DataManager.getUserData(event.player.name)
-
-                data?.lastLogIn = System.currentTimeMillis()
-            }
-        }
-    }, Event.Priority.Lowest, osm.pl)
-
-    // Update a player's playtime
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
-        override fun onPlayerQuit(event: PlayerQuitEvent?) {
-            if (event != null) {
-                val data = DataManager.getUserData(event.player.name)
-
-                if (data != null) {
-                    val time = System.currentTimeMillis()
-
-                    data.lastLogOut = time
-                    data.playTime = (time - data.lastLogIn) + data.playTime
-                }
-            }
-        }
-    }, Event.Priority.Lowest, osm.pl)
-
+    // Update KD leaderboard.
     osm.pl.server.pluginManager.registerEvent(Event.Type.ENTITY_DEATH, object : EntityListener() {
         override fun onEntityDeath(event: EntityDeathEvent?) {
             val player = event?.entity

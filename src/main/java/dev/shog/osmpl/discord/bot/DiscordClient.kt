@@ -86,9 +86,6 @@ internal fun DiscordLink.getBot() = object : IBot {
 
                 execCommands(this, pl.server)
 
-                println(message.channelId.value)
-                println(config.content.getLong("channel"))
-
                 if (message.channelId.value == config.content.getLong("channel") && !message.content.startsWith("!")) {
                     pl.server.broadcastMessage(
                         messageContainer.getMessage("minecraft.default",
