@@ -80,6 +80,13 @@ class User(internal val dataUser: DataUser) {
     fun isMuted() =
             currentMute != null
 
+    var lastWild: Long = dataUser.lastWild
+        set(value) {
+            field = value
+            dataUser.lastWild = value
+            DataManager.saveUser(this)
+        }
+
     override fun toString(): String {
         return "User{name=$name,currentBan=$currentBan,isBanned=${isBanned()},playTime=${playTime},lastLogIn=${lastLogIn},lastLogOut=${lastLogOut}, firstJoin=${firstJoin},punishments=${punishments}}"
     }

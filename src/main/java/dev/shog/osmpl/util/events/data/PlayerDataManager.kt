@@ -25,6 +25,39 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, PunishHandler.MUTE_HANDLE(osm), Event.Priority.Highest, osm.pl)
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, PunishHandler.MUTE_COMMAND_HANDLE(osm), Event.Priority.Highest, osm.pl)
 
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_PRELOGIN, object : PlayerListener() {
+        override fun onPlayerPreLogin(event: PlayerPreLoginEvent?) {
+            if (event != null) {
+                val ip = try {
+                    event.address.hostAddress
+                } catch (e: Exception) {
+                    null
+                }
+
+                println(ip)
+                println(event.name)
+
+                if (ip == null) {
+                    event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, "${ChatColor.RED}Your IP couldn't be resolved.")
+                    return
+                }
+
+                val ipBanned = DataManager.isIpBanned(ip)
+
+                if (ipBanned.any()) {
+                    osm.pl.server.broadcastPermission(
+                        "${ChatColor.RED}Someone has tried to connect to ${ipBanned.first().name} on a banned ip ($ip), they have been kicked.",
+                        "osm.notify.ips",
+                        true
+                    )
+
+                    event.disallow(PlayerPreLoginEvent.Result.KICK_BANNED, "${ChatColor.RED}You have connected on an IP that has been previously banned.")
+                    return
+                }
+            }
+        }
+    }, Event.Priority.Highest, osm.pl)
+
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
         override fun onPlayerJoin(event: PlayerJoinEvent?) {
             val player = event?.player
@@ -38,20 +71,6 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
 
                 if (ip == null) {
                     player.kickPlayer("${ChatColor.RED}Your IP could not be resolved.")
-                    return
-                }
-
-                val ipBanned = DataManager.isIpBanned(ip)
-
-                if (ipBanned.any()) {
-                    osm.pl.server.broadcastPermission(
-                        "${ChatColor.RED}${player.name} has connected on a banned ip ($ip), they have been kicked.",
-                        "osm.notify.ips",
-                        true
-                    )
-
-                    player.kickPlayer("${ChatColor.RED}You have connected on an IP that has been previously banned.")
-
                     return
                 }
 

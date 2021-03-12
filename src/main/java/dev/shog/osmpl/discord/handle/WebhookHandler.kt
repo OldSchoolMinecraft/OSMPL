@@ -16,13 +16,13 @@ object WebhookHandler {
      * Invoke for a listener.
      */
     suspend fun invoke(message: String, name: String) {
-        val image = ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
+//        val image = ImageHandler.getUserImage(if (name == "OSM Server") "osm" else name)
 
         GlobalScope.launch {
             sendMessage(
                 message.replace(Regex("<((@!?\\d+)|(:.+?:\\d+)|(&\\d+))>"), ""),
                 name,
-                image ?: "",
+//                image ?: "",
                 OsmPl.discordLink.config.content.getString("url")
             ).join()
         }
@@ -49,13 +49,19 @@ object WebhookHandler {
     private fun sendMessage(
             message: String,
             username: String,
-            image: String,
+//            image: String,
             hook: String
     ) = Unirest.post(hook)
             .header("Content-Type", "application/json")
-            .body(getJsonObject(username, image, message))
+            .body(getJsonObject(username, message))
+//        .body(getJsonObject(username, image, message))
             .asStringAsync()
 
-    private fun getJsonObject(username: String, image: String, content: String): String =
-            "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"
+    private fun getJsonObject(
+        username: String,
+//        image: String,
+        content: String
+    ): String =
+        "{\"username\": \"$username\", \"tts\": \"false\", \"content\": \"$content\"}"
+//            "{\"username\": \"$username\", \"avatar_url\": \"$image\", \"tts\": \"false\", \"content\": \"$content\"}"
 }
