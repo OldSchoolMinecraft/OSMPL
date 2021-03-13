@@ -171,6 +171,9 @@ commands:
     streak:
         description: View your login streak.
         usage: /streak
+    ignorebroadcast:
+        description: Ignore the automated broadcasts.
+        usage: /ignorebroadcast
 permissions:
     osm.particles:
         description: Use particles.

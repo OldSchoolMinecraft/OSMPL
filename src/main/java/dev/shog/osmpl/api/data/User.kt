@@ -87,6 +87,13 @@ class User(internal val dataUser: DataUser) {
             DataManager.saveUser(this)
         }
 
+    var ignoreBroadcast: Boolean = dataUser.ignoreBroadcast
+        set(value) {
+            field = value
+            dataUser.ignoreBroadcast = value
+            DataManager.saveUser(this)
+        }
+
     override fun toString(): String {
         return "User{name=$name,currentBan=$currentBan,isBanned=${isBanned()},playTime=${playTime},lastLogIn=${lastLogIn},lastLogOut=${lastLogOut}, firstJoin=${firstJoin},punishments=${punishments}}"
     }

@@ -17,5 +17,6 @@ data class DataUser(
         var currentMute: Punishment? = null,
         var kills: Int = 0,
         var deaths: Int = 0,
-        var lastWild: Long = -1L
+        var lastWild: Long = -1L,
+        var ignoreBroadcast: Boolean = false
 )

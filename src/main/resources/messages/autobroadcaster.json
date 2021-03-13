@@ -1,0 +1,10 @@
+{
+  "error": {
+    "console": "You must be a player for this command!",
+    "user-exists": "§cThat user doesn't exist!"
+  },
+  "ignore": {
+    "true": "§aYou can now see auto-broadcasts!",
+    "false": "§cYou can no longer see auto-broadcasts."
+  }
+}

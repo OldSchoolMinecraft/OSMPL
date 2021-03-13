@@ -80,6 +80,8 @@ abstract class OsmPlugin : JavaPlugin() {
         } catch (ex: Exception) {
             System.err.println("[OSMPL] There was an issue enabling ${module.name}")
             modules[module] = false
+
+            ex.printStackTrace()
         }
     }
 

@@ -4,7 +4,7 @@ import dev.shog.osmpl.api.OsmModule
 import org.json.JSONObject
 import java.io.File
 
-class Configuration(val osmModule: OsmModule) {
+class Configuration(val osmModule: OsmModule, defaultContent: JSONObject? = null) {
     companion object {
         val FOLDER by lazy {
             val folder = File("osmpl")
@@ -59,7 +59,12 @@ class Configuration(val osmModule: OsmModule) {
     init {
         if (!configFile.exists()) {
             configFile.createNewFile()
-            configFile.outputStream().write("{}".toByteArray())
+
+            if (defaultContent == null) {
+                configFile.outputStream().write("{}".toByteArray())
+            } else {
+                configFile.outputStream().write(defaultContent.toString().toByteArray())
+            }
         }
 
         refreshContent()

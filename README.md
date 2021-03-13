@@ -13,6 +13,3 @@ OSMPL contains various modules that give different functionality. The current mo
 - ModuleManager
 
 These modules can be disabled in game by using the `/module` command, or can be disabled by default in the OSMPL config.
-
-## How to run it yourself
-If you want to run this plugin yourself, message `SHO#0001` on Discord.
