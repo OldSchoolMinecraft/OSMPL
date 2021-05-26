@@ -61,32 +61,6 @@ internal val ON_VIEW_LOCKETTE = { osm: OsmModule ->
 }
 
 /**
- * Enable slow mod on player count.
- */
-internal val SLOW_MODE_AUTO_TOGGLE = { osm: OsmModule ->
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_JOIN, object : PlayerListener() {
-        override fun onPlayerJoin(event: PlayerJoinEvent?) {
-            if (event != null && osm.pl.server.onlinePlayers.size >= osm.config.content.getInt("enableSlowModeAt")) {
-                UtilModule.slowMode.enabled = true
-            }
-        }
-    }, Event.Priority.Normal, osm.pl)
-
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
-        override fun onPlayerQuit(event: PlayerQuitEvent?) {
-            if (
-                    event != null
-                    && osm.config.content.getBoolean("slowModeDisableUnderThreshold")
-                    && osm.pl.server.onlinePlayers.size < osm.config.content.getInt("enableSlowModeAt")
-                    && UtilModule.slowMode.enabled
-            ) {
-                UtilModule.slowMode.enabled = false
-            }
-        }
-    }, Event.Priority.Normal, osm.pl)
-}
-
-/**
  * Handles players moving.
  */
 internal val MOVE_HANDLER = { osm: OsmModule ->

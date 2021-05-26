@@ -21,7 +21,6 @@ import dev.shog.osmpl.util.commands.PLAY_TIME_TOP
 import dev.shog.osmpl.util.commands.RAINBOW
 import dev.shog.osmpl.util.commands.SEEN_COMMAND
 import dev.shog.osmpl.util.commands.SLEEPING_COMMAND
-import dev.shog.osmpl.util.commands.SLOWMODE_COMMAND
 import dev.shog.osmpl.util.commands.STAFF_COMMAND
 import dev.shog.osmpl.util.commands.punish.*
 import dev.shog.osmpl.util.commands.punish.BAN_COMMAND
@@ -34,7 +33,6 @@ import dev.shog.osmpl.util.commands.punish.VIEW_PUNISHMENTS
 import dev.shog.osmpl.util.events.*
 import dev.shog.osmpl.util.events.ENTITY_DEATH
 import dev.shog.osmpl.util.events.PLAYER_CHAT
-import dev.shog.osmpl.util.events.SLOW_MODE_AUTO_TOGGLE
 import dev.shog.osmpl.util.events.STAFF_DISABLE
 import dev.shog.osmpl.util.events.data.PLAYER_DATA_MANAGER
 import dev.shog.osmpl.webHook
@@ -46,20 +44,17 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
 
     init {
         commands.addAll(setOf(
-                STREAK_COMMAND, DISCORD, WARNINGS_COMMAND, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, SLOWMODE_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, VIEW_PUNISHMENTS, WARN_COMMAND, RAINBOW, DISABLE_QUESTS, PARTICLE_EFFECT, WILD_COMMAND, TOGGLE_STAFF_MESSAGES, KILL_DEATH_LEADERBOARD
+                SEARCH_IP_COMMAND, STREAK_COMMAND, DISCORD, WARNINGS_COMMAND, HAT_COMMAND, LIST_COMMAND, OSM_COMMAND, SLEEPING_COMMAND, STAFF_COMMAND, DONATE_COMMAND, RAFFLE_COMMAND, BAN_COMMAND, TEMP_BAN_COMMAND, SEEN_COMMAND, UN_BAN_COMMAND, PLAYER_MANAGER, LANDMARKS_COMMAND, MUTE_COMMAND, TEMP_MUTE_COMMAND, UN_MUTE_COMMAND, PLAY_TIME_TOP, BAL_TOP, VIEW_PUNISHMENTS, WARN_COMMAND, RAINBOW, DISABLE_QUESTS, PARTICLE_EFFECT, WILD_COMMAND, TOGGLE_STAFF_MESSAGES, KILL_DEATH_LEADERBOARD
         ))
     }
 
     companion object {
-        internal lateinit var slowMode: SlowMode
         internal lateinit var ipChecker: IpChecker
     }
 
     override fun onEnable() {
         println("OSMPL has been enabled!")
         DataManager
-
-        slowMode = SlowMode(this)
 
         try {
             PermissionsEx.getPermissionManager()
@@ -94,9 +89,7 @@ class UtilModule(pl: OsmPlugin) : OsmModule("Util", 1.0F, pl) {
         ipChecker.refreshVpnGate()
         webHook = config.content.getString("webhook")
 
-        slowMode.timing =config.content.getInt("slowModeInSec").toLong()
-
-        sequenceOf(STREAK_INVOKE, ENTITY_DEATH, STAFF_DISABLE, PLAYER_DATA_MANAGER, PLAYER_CHAT, SLOW_MODE_AUTO_TOGGLE, ON_VIEW_LOCKETTE, BLOCK_PLACE, MOVE_HANDLER)
+        sequenceOf(STREAK_INVOKE, ENTITY_DEATH, STAFF_DISABLE, PLAYER_DATA_MANAGER, PLAYER_CHAT, ON_VIEW_LOCKETTE, BLOCK_PLACE, MOVE_HANDLER)
                 .forEach { it.invoke(this) }
 
         val ev = BedEvents(this)

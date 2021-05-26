@@ -34,9 +34,6 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                     null
                 }
 
-                println(ip)
-                println(event.name)
-
                 if (ip == null) {
                     event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, "${ChatColor.RED}Your IP couldn't be resolved.")
                     return

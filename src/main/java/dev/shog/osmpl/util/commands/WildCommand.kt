@@ -5,7 +5,6 @@ import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.data.DataManager
 import dev.shog.osmpl.api.msg.sendMessageHandler
 import org.bukkit.Location
-import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.entity.Player
 import java.util.concurrent.TimeUnit
@@ -18,7 +17,11 @@ private fun findLocation(world: World): Location {
 
     val location = Location(world, xCoord, 128.00, zCoord)
 
-    return Util.getSafeDestination(location)
+    val safeLocation =  Util.getSafeDestination(location)
+
+    world.getChunkAt(safeLocation).load(true)
+
+    return safeLocation
 }
 
 val WILD_COMMAND = Command.make("wild") {

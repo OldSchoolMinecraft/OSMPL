@@ -33,6 +33,23 @@ object StreakHandler {
     private fun getRewardAmount(streak: Int): Double =
             streak * 5.0
 
+    /**
+     * Get a user's streak by the day count.
+     */
+    fun getStreak(user: String): Int {
+        val rs = SqlHandler.getConnection(db = "money")
+            .prepareStatement("SELECT streak FROM dailyreward WHERE player = ?")
+            .apply {
+                setString(1, user.toLowerCase())
+            }
+            .executeQuery()
+
+        return if (rs.next()) {
+            rs.getInt("streak")
+        } else {
+            0
+        }
+    }
 
     /**
      * Handle a user's login event.

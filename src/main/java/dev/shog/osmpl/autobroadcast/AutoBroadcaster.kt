@@ -7,6 +7,7 @@ import dev.shog.osmpl.api.msg.MessageContainer
 import dev.shog.osmpl.money.BankHandler
 import dev.shog.osmpl.money.commands.BANKS
 import dev.shog.osmpl.money.commands.SAVINGS_COMMAND
+import dev.shog.osmpl.translateAlternateColorCodes
 import org.bukkit.ChatColor
 import org.json.JSONArray
 import org.json.JSONObject
@@ -54,7 +55,9 @@ class AutoBroadcaster(pl: OsmPlugin) : OsmModule("AutoBroadcaster", 1.0F, pl) {
             obj.getJSONArray("messages")
         messages.clear()
         messages.addAll(
-            fileMessages.toList().map { msg -> msg.toString() }
+            fileMessages.toList()
+                .map { msg -> msg.toString() }
+                .map { msg -> translateAlternateColorCodes('&', msg) }
         )
 
         val delay = if (!obj.has("delay"))

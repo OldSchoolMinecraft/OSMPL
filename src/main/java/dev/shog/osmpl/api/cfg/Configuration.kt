@@ -3,6 +3,7 @@ package dev.shog.osmpl.api.cfg
 import dev.shog.osmpl.api.OsmModule
 import org.json.JSONObject
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 class Configuration(val osmModule: OsmModule, defaultContent: JSONObject? = null) {
     companion object {
@@ -47,18 +48,23 @@ class Configuration(val osmModule: OsmModule, defaultContent: JSONObject? = null
      */
     fun refreshContent() {
         content = JSONObject(String(configFile.inputStream().readBytes()))
+
+        osmModule.log("Loaded config with content: ${content.toString(4)}")
     }
 
     /**
      * Save [content] to [configFile].
      */
     fun save() {
-        configFile.writeBytes(content.toString().toByteArray())
+        osmModule.log("Saving config, took ${measureTimeMillis {
+            configFile.writeBytes(content.toString().toByteArray())
+        }} ms")
     }
 
     init {
         if (!configFile.exists()) {
             configFile.createNewFile()
+            osmModule.log("Config file is being created with default content: $defaultContent")
 
             if (defaultContent == null) {
                 configFile.outputStream().write("{}".toByteArray())

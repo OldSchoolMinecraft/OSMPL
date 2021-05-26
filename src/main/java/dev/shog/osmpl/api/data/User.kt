@@ -95,6 +95,6 @@ class User(internal val dataUser: DataUser) {
         }
 
     override fun toString(): String {
-        return "User{name=$name,currentBan=$currentBan,isBanned=${isBanned()},playTime=${playTime},lastLogIn=${lastLogIn},lastLogOut=${lastLogOut}, firstJoin=${firstJoin},punishments=${punishments}}"
+        return dataUser.toString()
     }
 }

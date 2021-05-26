@@ -9,6 +9,7 @@ import dev.shog.osmpl.money.EconomyModule
 import dev.shog.osmpl.api.RemoteRestart
 import dev.shog.osmpl.api.SqlHandler
 import dev.shog.osmpl.autobroadcast.AutoBroadcaster
+import dev.shog.osmpl.joinsplus.JoinsPlus
 import dev.shog.osmpl.tf.TrustFactorModule
 import dev.shog.osmpl.util.UtilModule
 
@@ -61,14 +62,15 @@ class OsmPl : OsmPlugin() {
     }
 
     override val modules: HashMap<OsmModule, Boolean> =
-            hashMapOf(
-                    UtilModule(this) to true,
-                    discordLink to true,
-                    EconomyModule(this) to true,
-                    ModuleManager(this) to true,
-                    TrustFactorModule(this) to true,
-                    AutoBroadcaster(this) to true
-            )
+        hashMapOf(
+            UtilModule(this) to true,
+            discordLink to true,
+            EconomyModule(this) to true,
+            ModuleManager(this) to true,
+            TrustFactorModule(this) to true,
+            AutoBroadcaster(this) to true,
+            JoinsPlus(this) to true
+        )
 
     override val requiredConfig: Collection<String> = setOf("username", "password", "url", "disabled")
 }

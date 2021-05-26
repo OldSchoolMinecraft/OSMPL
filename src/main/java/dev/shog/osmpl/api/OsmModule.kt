@@ -4,6 +4,8 @@ import dev.shog.osmpl.api.cfg.Configuration
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.msg.MessageContainer
 import org.bukkit.plugin.java.JavaPlugin
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * An OSM plugin.
@@ -38,4 +40,11 @@ abstract class OsmModule(val name: String, val version: Float, val pl: OsmPlugin
      * Config
      */
     abstract val config: Configuration
+
+    /**
+     * Log something and tag the module.
+     */
+    fun log(log: String) {
+        println("[OSMPL:${name}:${version}] $log")
+    }
 }

@@ -22,25 +22,6 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, object : PlayerListener() {
         override fun onPlayerChat(event: PlayerChatEvent?) {
             if (event != null) {
-                if (UtilModule.slowMode.enabled && LAST_SENT_MESSAGE.containsKey(event.player.name.toLowerCase())) {
-                    val time = LAST_SENT_MESSAGE[event.player.name.toLowerCase()] ?: 0
-
-                    val wait = UtilModule.slowMode.timing
-
-                    if (System.currentTimeMillis() - time < wait && !event.player.hasPermission("osm.slowbypass")) {
-                        var calc = (wait - (System.currentTimeMillis() - time))
-                        var type = "seconds"
-
-                        if (calc >= 1000)
-                            calc /= 1000
-                        else type = "milliseconds"
-
-                        event.player.sendMessage("${ChatColor.RED}Please wait $calc more $type before sending another message.")
-                        event.isCancelled = true
-                        return
-                    }
-                }
-
                 LAST_SENT_MESSAGE[event.player.name.toLowerCase()] = System.currentTimeMillis()
 
                 val user = PermissionsEx.getPermissionManager().getUser(event.player)
