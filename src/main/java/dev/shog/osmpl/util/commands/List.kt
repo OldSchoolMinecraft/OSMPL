@@ -3,7 +3,6 @@ package dev.shog.osmpl.util.commands
 import com.oldschoolminecraft.vanish.Invisiman
 import dev.shog.osmpl.api.cmd.Command
 import dev.shog.osmpl.api.msg.sendMultiline
-import org.bukkit.Bukkit.getServer
 import ru.tehkode.permissions.PermissionGroup
 import ru.tehkode.permissions.PermissionUser
 import ru.tehkode.permissions.bukkit.PermissionsEx

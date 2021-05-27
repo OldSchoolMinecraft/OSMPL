@@ -9,12 +9,7 @@ version '1.0'
 
 repositories {
     mavenCentral()
-    jcenter()
     maven { url 'https://jitpack.io' }
-
-    maven {
-        url "https://dl.bintray.com/kordlib/Kord"
-    }
 }
 
 configurations {
@@ -28,14 +23,14 @@ dependencies {
     compile 'com.konghq:unirest-java:3.7.02'
     compile 'mysql:mysql-connector-java:8.0.15'
     compile 'org.nanohttpd:nanohttpd:2.3.1'
-    compile 'dev.kord:kord-core:0.7.0-RC'
+    compile 'dev.kord:kord-core:0.7.0-RC3'
 
-    implementation(files("/libs/Project-Poseidon.jar"))
-    implementation(files("/libs/OSAS.jar"))
-    implementation(files("/libs/Essentials.jar"))
-    implementation(files("/libs/Invisiman.jar"))
-    implementation(files("/libs/PermissionsEX.jar"))
-    implementation(files("/libs/Lockette.jar"))
+    implementation(files("libs/Project-Poseidon.jar"))
+    implementation(files("libs/OSAS.jar"))
+    implementation(files("libs/Essentials.jar"))
+    implementation(files("libs/Invisiman.jar"))
+    implementation(files("libs/PermissionsEx.jar"))
+    implementation(files("libs/Lockette.jar"))
 }
 
 jar {

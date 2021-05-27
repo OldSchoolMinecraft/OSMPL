@@ -173,3 +173,13 @@ fun translateAlternateColorCodes(altColorChar: Char, textToTranslate: String): S
     }
     return String(b)
 }
+
+fun generateRandomString(length: Int): String {
+    val alphaNumericString = "0123456789abcdefghijklmnopqrstuvxyz"
+    val sb = StringBuilder(length)
+    for (i in 0 until length) {
+        val index = (alphaNumericString.length * Math.random()).toInt()
+        sb.append(alphaNumericString[index])
+    }
+    return sb.toString()
+}
