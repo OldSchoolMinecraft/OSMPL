@@ -99,6 +99,12 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
                     null
                 }
 
+                if (checkedIp != null) {
+                    /*if (checkedIp.asn == 13) {
+                        //
+                    }*/
+                }
+
                 if (ip != "127.0.0.1") {
                     val gate = UtilModule.ipChecker.checkVpnGate(ip.orElse(""))
 
