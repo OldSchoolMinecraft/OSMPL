@@ -39,7 +39,7 @@ internal val ON_VIEW_LOCKETTE = { osm: OsmModule ->
                     && !Lockette.isOwner(event.clickedBlock, event.player.name)
                     && event.action == Action.RIGHT_CLICK_BLOCK
                     && event.player.hasPermissionOrOp("osm.ovl")) {
-                event.player.sendMessage("${ChatColor.YELLOW}You have bypassed Lockette due to your moderator status.")
+                //event.player.sendMessage("${ChatColor.YELLOW}You have bypassed Lockette due to your moderator status.")
                 event.isCancelled = false
             }
         }
@@ -53,7 +53,7 @@ internal val ON_VIEW_LOCKETTE = { osm: OsmModule ->
                     && !Lockette.isOwner(event.block, event.player.name)
                     && event.player.hasPermissionOrOp("osm.ovl")
             ) {
-                event.player.sendMessage("${ChatColor.YELLOW}You have bypassed Lockette due to your moderator status.")
+                //event.player.sendMessage("${ChatColor.YELLOW}You have bypassed Lockette due to your moderator status.")
                 event.isCancelled = false
             }
         }
