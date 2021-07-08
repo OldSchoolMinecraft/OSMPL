@@ -25,6 +25,35 @@ internal val PLAYER_DATA_MANAGER = { osm: OsmModule ->
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, PunishHandler.MUTE_HANDLE(osm), Event.Priority.Highest, osm.pl)
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, PunishHandler.MUTE_COMMAND_HANDLE(osm), Event.Priority.Highest, osm.pl)
 
+    // staff chat
+    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_CHAT, object : PlayerListener() {
+        override fun onPlayerChat(event: PlayerChatEvent?) {
+            if (event != null) {
+                val msg = try {
+                    event.message
+                } catch (e: Exception) {
+                    null
+                }
+
+                val player = try {
+                    event.player
+                } catch (e: Exception) {
+                    null
+                }
+
+                if (msg != null && player != null && msg.startsWith("#") && player.hasPermission("osm.staffchat")) {
+                    event.isCancelled = true
+
+                    osm.pl.server.broadcastPermission(
+                        msg.replaceFirst("#", ""),
+                        "osm.staffchat",
+                        true
+                    )
+                }
+            }
+        }
+    }, Event.Priority.Normal, osm.pl)
+
     osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_PRELOGIN, object : PlayerListener() {
         override fun onPlayerPreLogin(event: PlayerPreLoginEvent?) {
             if (event != null) {

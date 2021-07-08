@@ -31,6 +31,7 @@ dependencies {
     implementation(files("libs/Invisiman.jar"))
     implementation(files("libs/PermissionsEx.jar"))
     implementation(files("libs/Lockette.jar"))
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 jar {
