@@ -31,7 +31,7 @@ object StreakHandler {
      * Get the reward amount for a [streak].
      */
     private fun getRewardAmount(streak: Int): Double =
-            streak * 5.0
+        (streak * 5.0).coerceAtMost(50.0)
 
     /**
      * Get a user's streak by the day count.
@@ -90,7 +90,7 @@ object StreakHandler {
                             .prepareStatement("UPDATE dailyreward SET lastLogin = ?, streak = ? WHERE player = ?")
                             .apply {
                                 setLong(1, System.currentTimeMillis())
-                                setInt(2, 1)
+                                setInt(2, streak.streak + 1)
                                 setString(3, loginEvent.player.name.toLowerCase())
                             }
                             .executeUpdate()
