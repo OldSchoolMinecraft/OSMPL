@@ -39,7 +39,7 @@ internal class BedEvents(private val osmPl: OsmModule) : PlayerListener() {
 
                 server.broadcastMessage(osmPl.messageContainer.getMessage(
                     "sleep.complete",
-                    if (sleepCount == 0) 1 else sleepCount, // if it's only one player sleeping, it appears as though there's 0
+                    sleepCount + 1,
                     playerCount
                 ))
             } else {
