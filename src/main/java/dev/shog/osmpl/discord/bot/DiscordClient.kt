@@ -4,13 +4,17 @@ import com.oldschoolminecraft.vanish.Invisiman
 import dev.kord.core.Kord
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
+import dev.kord.gateway.Intent
+import dev.kord.gateway.PrivilegedIntent
 import dev.shog.osmpl.api.SqlHandler
 import dev.shog.osmpl.discord.DiscordLink
 import dev.shog.osmpl.discord.handle.WebhookHandler
 import dev.shog.osmpl.discord.linking.LinkManager.commitVerificationCode
 import dev.shog.osmpl.discord.linking.LinkManager.isLinked
 import dev.shog.osmpl.generateRandomString
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import org.bukkit.ChatColor
 import org.bukkit.Server
@@ -22,6 +26,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 /**
  * Get the bot.
  */
+@OptIn(ExperimentalUnsignedTypes::class)
 internal fun DiscordLink.getBot() = object : IBot {
     /**
      * Discord's commands.
@@ -73,15 +78,16 @@ internal fun DiscordLink.getBot() = object : IBot {
     suspend fun getProperContent(e: MessageCreateEvent, dl: DiscordLink): String {
         var content = e.message.content
 
-        e.message.mentionedUsers.collect { user ->
+        e.message.mentionedUsers.onEach { user ->
             content = content.replace(
-                "<@!${user.id.asString}>", dl.messageContainer.getMessage(
+                "<@!${user.id.value}>", dl.messageContainer.getMessage(
                     "mentions.user",
                     user.username,
                     user.discriminator
                 )
             )
-        }
+        }.collect()
+
 
         return content
     }
@@ -110,7 +116,7 @@ internal fun DiscordLink.getBot() = object : IBot {
 
                 execCommands(this, pl.server)
 
-                if (message.channelId.value == config.content.getLong("channel") && !message.content.startsWith("!")) {
+                if (message.channelId.value.toLong() == config.content.getLong("channel") && !message.content.startsWith("!")) {
                     pl.server.broadcastMessage(
                         messageContainer.getMessage("minecraft.default",
                             mem.username,
@@ -123,7 +129,11 @@ internal fun DiscordLink.getBot() = object : IBot {
         }
 
         kord.login {
-            playing("with yo momma")
+            intents += Intent.GuildMessages
+
+            presence {
+                playing("with yo momma")
+            }
         }
 
         return kord
