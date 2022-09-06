@@ -263,6 +263,7 @@ object DataManager {
             when (punishment.type) {
                 PunishmentType.BAN -> data.currentBan = punishment
                 PunishmentType.MUTE -> data.currentMute = punishment
+                else -> { }
             }
         }
     }
