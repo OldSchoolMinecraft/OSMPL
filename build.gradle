@@ -36,6 +36,7 @@ dependencies {
 
 shadowJar {
     dependencies {
+        exclude(dependency('mysql:mysql-connector-java:8.0.15'))
         exclude(dependency(files("libs/Project-Poseidon.jar")))
         exclude(dependency(files("libs/Project-Poseidon.jar")))
         exclude(dependency(files("libs/OSAS.jar")))

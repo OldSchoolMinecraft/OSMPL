@@ -33,7 +33,6 @@ internal object SqlHandler {
             source.password = password
             source.serverName = url
             source.databaseName = db
-            source.serverTimezone = "CST"
 
             val con = source.connection
 
