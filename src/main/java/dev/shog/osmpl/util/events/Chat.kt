@@ -36,9 +36,9 @@ internal val PLAYER_CHAT = { osm: OsmModule ->
                 else
                     event.message = ChatColor.stripColor(event.message)
 
-                runBlocking {
+                /*runBlocking {
                     WebhookHandler.sendDiscordMessage(event.player, ChatColor.stripColor(event.message))
-                }
+                }*/
 
                 val name = if (colorful.contains(event.player.name.toLowerCase()))
                     applyRainbow(event.player.displayName)

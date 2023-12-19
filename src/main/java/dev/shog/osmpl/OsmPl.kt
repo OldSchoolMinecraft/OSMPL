@@ -36,7 +36,7 @@ class OsmPl : OsmPlugin() {
     init {
         discordLink = DiscordLink(this)
 
-        initRemoteRestart()
+        //initRemoteRestart() fuck remote restart. all my homies hate remote restart
     }
 
     override fun onEnable() {
@@ -58,8 +58,8 @@ class OsmPl : OsmPlugin() {
      * Set [remoteRestart]
      */
     private fun initRemoteRestart() {
-        remoteRestart = RemoteRestart(this, container)
-        println("[OSMPL] Remote restart is open at http://localhost:8010/restart")
+        /*remoteRestart = RemoteRestart(this, container)
+        println("[OSMPL] Remote restart is open at http://localhost:8010/restart")*/
     }
 
     override val modules: HashMap<OsmModule, Boolean> =

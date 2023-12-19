@@ -36,15 +36,18 @@ dependencies {
 
 shadowJar {
     dependencies {
-        exclude(dependency('mysql:mysql-connector-java:8.0.15'))
-        exclude(dependency(files("libs/Project-Poseidon.jar")))
-        exclude(dependency(files("libs/Project-Poseidon.jar")))
-        exclude(dependency(files("libs/OSAS.jar")))
-        exclude(dependency(files("libs/Essentials.jar")))
-        exclude(dependency(files("libs/Invisiman.jar")))
-        exclude(dependency(files("libs/PermissionsEx.jar")))
-        exclude(dependency(files("libs/Lockette.jar")))
+        exclude('mysql:mysql-connector-java:8.0.15')
+        exclude("Project-Poseidon.jar")
+        exclude("Project-Poseidon.jar")
+        exclude("OSAS.jar")
+        exclude("Essentials.jar")
+        exclude("Invisiman.jar")
+        exclude("PermissionsEx.jar")
+        exclude("Lockette.jar")
     }
+    archiveBaseName.set('osmpl-stripped')
+    archiveClassifier.set('');
+    archiveVersion.set('')
 }
 
 jar {

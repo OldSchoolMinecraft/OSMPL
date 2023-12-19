@@ -19,12 +19,12 @@ import org.yi.acru.bukkit.Lockette.Lockette
  * Disable staff mode on leave
  */
 internal val STAFF_DISABLE = { osm: OsmModule ->
-    osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
+    /*osm.pl.server.pluginManager.registerEvent(Event.Type.PLAYER_QUIT, object : PlayerListener() {
         override fun onPlayerQuit(event: PlayerQuitEvent?) {
             if (event != null)
                 disableStaffMode(event.player)
         }
-    }, Event.Priority.Highest, osm.pl)
+    }, Event.Priority.Highest, osm.pl)*/
 }
 
 /**

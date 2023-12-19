@@ -94,11 +94,11 @@ internal class DiscordLink(pl: OsmPlugin): OsmModule("DiscordLink", 1.0F, pl) {
         })
 
 
-        pl.server.scheduler.scheduleAsyncDelayedTask(pl) {
+        /*l.server.scheduler.scheduleAsyncDelayedTask(pl) {
             runBlocking {
                 client = getBot().getClient()
             }
-        }
+        }*/
     }
 
     override fun onDisable() {
